@@ -2,8 +2,9 @@ import { MongoClient, Db, Collection, Document, ObjectId } from "mongodb";
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
-export const COLLECTIONS: { COOKBOOKS: Collection } = {
+export const COLLECTIONS: { COOKBOOKS: Collection; USERS: Collection } = {
   COOKBOOKS: undefined,
+  USERS: undefined,
 };
 
 export async function dbConnect() {
@@ -12,32 +13,27 @@ export async function dbConnect() {
     await client.connect();
     const db: Db = client.db(process.env.DB_NAME);
     COLLECTIONS.COOKBOOKS = db.collection("cookbooks");
+    COLLECTIONS.USERS = db.collection("users");
   } catch (error) {
     console.error("Connection to MongoDB Atlas failed!", error);
     process.exit();
   }
 }
 
-export async function getOne(
+export async function getById(
   collection: Collection,
   id: string
 ): Promise<Document> {
-  try {
-    const documents = await collection
-      .find({ _id: new ObjectId(id) })
-      .toArray();
-    return documents[0];
-  } catch {
-    console.error("Failed to get one");
-  }
+  const filter = { _id: new ObjectId(id) };
+  const documents = await collection.find(filter).toArray();
+  return documents[0];
 }
 
-export async function getAll(collection: Collection): Promise<Array<Document>> {
-  try {
-    return collection.find({}).toArray();
-  } catch {
-    console.error("Failed to get all");
-  }
+export async function get(
+  collection: Collection,
+  filter = {}
+): Promise<Array<Document>> {
+  return collection.find(filter).toArray();
 }
 
 export async function save(
@@ -46,12 +42,14 @@ export async function save(
   body: any
 ): Promise<Document> {
   try {
-    return collection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: { ...body } },
-      { upsert: true }
-    );
-  } catch {
-    console.error("Failed to save");
+    const filter = { _id: new ObjectId(id) };
+    const update = { $set: { ...body } };
+    const options = { upsert: true, returnDocument: "after" };
+    // @ts-ignore
+    const document = await collection.findOneAndUpdate(filter, update, options);
+    // @ts-ignore
+    return document.value;
+  } catch (err) {
+    console.log("ERROR: ", err);
   }
 }

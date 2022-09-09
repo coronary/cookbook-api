@@ -1,13 +1,13 @@
 import { ROUTES } from "../constants/Constants";
 import { auth } from "../middleware/Auth";
 import { superAuth } from "../middleware/SuperAuth";
-import { Cookbook } from "../models/Cookbook";
-import CookbookService from "../services/CookbookService";
+import { User } from "../models/User";
+import UserService from "../services/UserService";
 import { BaseController } from "./BaseController";
 
-export class CookbookController extends BaseController<Cookbook> {
+export class UserController extends BaseController<User> {
   constructor() {
-    super(Cookbook, new CookbookService(), ROUTES.COOKBOOKS);
+    super(User, new UserService(), ROUTES.COOKBOOKS);
   }
 
   @superAuth()

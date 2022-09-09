@@ -1,6 +1,3 @@
-import { Cookbook } from "../models/Cookbook";
-import passport from "passport";
-
 export const superAuth = (): any => {
   return (target: any, propertyKey: string, descriptor: any) => {
     const fn = descriptor.value;
