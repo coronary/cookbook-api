@@ -11,9 +11,11 @@ export class BaseModel<T> {
     return saved;
   }
 
-  // OVERLOAD
-  deserialize(): any {}
+  deserialize(): any {
+    throw new Error("Overload BaseModel.deserialize");
+  }
 
-  // OVERLOAD
-  serialize(): any {}
+  serialize(): any {
+    throw new Error("Overload BaseModel.serialize");
+  }
 }

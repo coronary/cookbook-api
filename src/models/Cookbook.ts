@@ -12,6 +12,7 @@ export interface DeSerializedCookbook {
   banner_url?: string;
   avatar_url?: string;
 }
+
 export interface SerializedCookbook {
   id?: ObjectId;
   name: string;

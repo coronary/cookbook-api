@@ -7,7 +7,7 @@ import { BaseController } from "./BaseController";
 
 export class UserController extends BaseController<User> {
   constructor() {
-    super(User, new UserService(), ROUTES.COOKBOOKS);
+    super(User, new UserService(), ROUTES.USERS);
   }
 
   @superAuth()
@@ -16,8 +16,8 @@ export class UserController extends BaseController<User> {
   }
 
   @superAuth()
-  async delete(req, res) {
-    super.delete(req, res);
+  async deleteOne(req, res) {
+    super.deleteOne(req, res);
   }
 
   @auth()

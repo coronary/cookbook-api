@@ -16,8 +16,8 @@ export class CookbookController extends BaseController<Cookbook> {
   }
 
   @superAuth()
-  async delete(req, res) {
-    super.delete(req, res);
+  async deleteOne(req, res) {
+    super.deleteOne(req, res);
   }
 
   @auth()

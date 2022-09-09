@@ -38,18 +38,21 @@ export async function get(
 
 export async function save(
   collection: Collection,
-  id: ObjectId,
+  id: string,
   body: any
 ): Promise<Document> {
-  try {
-    const filter = { _id: new ObjectId(id) };
-    const update = { $set: { ...body } };
-    const options = { upsert: true, returnDocument: "after" };
-    // @ts-ignore
-    const document = await collection.findOneAndUpdate(filter, update, options);
-    // @ts-ignore
-    return document.value;
-  } catch (err) {
-    console.log("ERROR: ", err);
-  }
+  const filter = { _id: new ObjectId(id) };
+  const update = { $set: { ...body } };
+  const options = { upsert: true, returnDocument: "after" };
+  // @ts-expect-error
+  const document = await collection.findOneAndUpdate(filter, update, options);
+  // @ts-expect-error
+  return document.value;
+}
+
+export async function deleteOne(
+  collection: Collection,
+  id: string
+): Promise<void> {
+  await collection.deleteOne({ _id: new ObjectId(id) });
 }

@@ -1,12 +1,13 @@
 import { Collection } from "mongodb";
 import { GenericModel } from "../controllers/BaseController";
-import { get, save, getById } from "../db/db";
+import { get, save, getById, deleteOne } from "../db/db";
 import { BaseModel } from "../models/BaseModel";
 
 export interface Service<T> {
   getById: (id: string) => Promise<T>;
   get: (any?) => Promise<Array<T>>;
   save: (any) => Promise<T>;
+  deleteOne: (id: string) => Promise<void>;
 }
 
 export class BaseService<T extends BaseModel<T>> implements Service<T> {
@@ -20,11 +21,17 @@ export class BaseService<T extends BaseModel<T>> implements Service<T> {
 
   public async getById(id: string): Promise<T> {
     const document = await getById(this.collection, id);
+    if (document == null) {
+      throw new Error("Document Not Found");
+    }
     return new this.type({ ...this.serialize(document) }).serialize();
   }
 
   public async get(filter?): Promise<Array<T>> {
     const documents = await get(this.collection, filter);
+    if (documents == null) {
+      throw new Error("Documents Not Found");
+    }
     return documents.map((u) =>
       new this.type({ ...this.serialize(u) }).serialize()
     );
@@ -36,13 +43,15 @@ export class BaseService<T extends BaseModel<T>> implements Service<T> {
     return new this.type({ ...this.serialize(document) }).serialize();
   }
 
-  // OVERLOAD
-  public serialize(document) {
-    return document;
+  public async deleteOne(id): Promise<void> {
+    return deleteOne(this.collection, id);
   }
 
-  // OVERLOAD
-  public deserialize(model) {
-    return model;
+  public serialize(document): any {
+    throw new Error("Overload BaseService.serialize");
+  }
+
+  public deserialize(model): any {
+    throw new Error("Overload BaseService.deserialize");
   }
 }
