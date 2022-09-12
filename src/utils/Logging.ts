@@ -33,7 +33,9 @@ export const logger = winston.createLogger({
 
 export const logRoutes = function (prefix, routes) {
   const routeList = routes.stack;
+
   routeList.forEach((r) => {
+    if (r.route == null) return;
     const method = r.route.stack[0].method.toUpperCase();
     const path = prefix + r.route.path;
     logger.info(`${method} - ${path}`);

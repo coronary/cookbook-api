@@ -74,18 +74,10 @@ class App {
     const loginController = new LoginController();
     const cookbookController = AppInjector.injectClass(CookbookController);
     const userController = AppInjector.injectClass(UserController);
-    const guideController = AppInjector.injectClass(GuideController);
-    const sectionController = AppInjector.injectClass(SectionController);
-    const tagController = AppInjector.injectClass(TagController);
-    const postController = AppInjector.injectClass(PostController);
 
     this.app.use(`/${ROUTES.LOGIN}`, loginController.router);
     this.app.use(`/${ROUTES.COOKBOOKS}`, cookbookController.router);
     this.app.use(`/${ROUTES.USERS}`, userController.router);
-    this.app.use(`/${ROUTES.GUIDES}`, guideController.router);
-    this.app.use(`/${ROUTES.SECTIONS}`, sectionController.router);
-    this.app.use(`/${ROUTES.TAGS}`, tagController.router);
-    this.app.use(`/${ROUTES.POSTS}`, postController.router);
 
     this.app.use(handleError);
   }

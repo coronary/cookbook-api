@@ -20,17 +20,18 @@ export interface GenericModel<T extends BaseModel<T, M>, M> {
 }
 
 export class BaseController<T extends BaseModel<T, M>, M> {
-  public router = Router();
+  public router = Router({ mergeParams: true });
 
   constructor(
     public model: GenericModel<T, M>,
     public service: Service<M>,
-    public route: string
+    public route: string,
+    public parentRoute: string = ""
   ) {
     autoBind(this);
-
     this.setRoutes();
-    logRoutes(`/${this.route}`, this.router);
+    this.setChildRoutes();
+    logRoutes(`${this.parentRoute}/${this.route}`, this.router);
   }
 
   setRoutes() {
@@ -41,9 +42,11 @@ export class BaseController<T extends BaseModel<T, M>, M> {
     this.router.delete(this.detailRoute(), this.deleteOne);
   }
 
+  setChildRoutes() {}
+
   @tryCatch()
   async getAll(req, res) {
-    const model = await this.service.get();
+    const model = await this.service.get({ ...req.body });
     res.send(model);
   }
 
