@@ -7,7 +7,7 @@ export const superAuth = (): any => {
       const [req, res, next] = args;
       const user = req.user;
 
-      if (user == null || !user.super_admin) {
+      if (user == null || !user.superAdmin) {
         return next(createError(401, "Unauthorized"));
       }
 

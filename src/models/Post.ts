@@ -1,6 +1,7 @@
 import PostService from "../services/PostService";
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
+import { AppInjector } from "../app";
 
 export interface DeSerializedPost {
   _id?: ObjectId;
@@ -23,7 +24,7 @@ export class Post extends BaseModel<Post, SerializedPost> {
   public tags: ObjectId[];
 
   constructor({ id, user, body, tags }: SerializedPost) {
-    super(new PostService());
+    super(AppInjector.injectClass(PostService));
     this._id = id;
     this.user = user;
     this.body = body;
@@ -31,11 +32,11 @@ export class Post extends BaseModel<Post, SerializedPost> {
   }
 
   public deserialize(): DeSerializedPost {
-    return new PostService().deserialize(this);
+    return AppInjector.injectClass(PostService).deserialize(this);
   }
 
   public serialize(): SerializedPost {
-    return new PostService().serialize({
+    return AppInjector.injectClass(PostService).serialize({
       _id: this._id,
       user: this.user,
       body: this.body,

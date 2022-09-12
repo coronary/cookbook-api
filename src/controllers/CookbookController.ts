@@ -1,4 +1,3 @@
-import { AppInjector } from "../app";
 import { ROUTES } from "../constants/Constants";
 import { cookbookAuth } from "../middleware/Auth";
 import { superAuth } from "../middleware/SuperAuth";
@@ -29,5 +28,5 @@ export class CookbookController extends BaseController<
     super.update(req, res);
   }
 
-  public static inject = ['cookbookService'] as const;
+  public static inject = ["cookbookService"] as const;
 }

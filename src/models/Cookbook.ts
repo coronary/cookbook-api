@@ -1,6 +1,7 @@
 import CookbookService from "../services/CookbookService";
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
+import { AppInjector } from "../app";
 
 export interface DeSerializedCookbook {
   _id?: ObjectId;
@@ -44,7 +45,7 @@ export class Cookbook extends BaseModel<Cookbook, SerializedCookbook> {
     bannerUrl,
     avatarUrl,
   }: SerializedCookbook) {
-    super(new CookbookService());
+    super(AppInjector.injectClass(CookbookService));
     this._id = id;
     this.name = name;
     this.streams = streams;
@@ -56,11 +57,11 @@ export class Cookbook extends BaseModel<Cookbook, SerializedCookbook> {
   }
 
   public deserialize(): DeSerializedCookbook {
-    return new CookbookService().deserialize(this);
+    return AppInjector.injectClass(CookbookService).deserialize(this);
   }
 
   public serialize(): SerializedCookbook {
-    return new CookbookService().serialize({
+    return AppInjector.injectClass(CookbookService).serialize({
       _id: this._id,
       name: this.name,
       streams: this.streams,

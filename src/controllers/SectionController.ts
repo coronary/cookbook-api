@@ -8,8 +8,8 @@ export class SectionController extends BaseController<
   Section,
   SerializedSection
 > {
-  constructor() {
-    super(Section, new SectionService(), ROUTES.SECTIONS);
+  constructor(sectionService: SectionService) {
+    super(Section, sectionService, ROUTES.SECTIONS);
   }
 
   @cookbookAuth()
@@ -26,4 +26,6 @@ export class SectionController extends BaseController<
   async update(req, res) {
     super.update(req, res);
   }
+
+  public static inject = ["sectionService"] as const;
 }

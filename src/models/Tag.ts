@@ -1,6 +1,7 @@
 import TagService from "../services/TagService";
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
+import { AppInjector } from "../app";
 
 export interface DeSerializedTag {
   _id?: ObjectId;
@@ -23,7 +24,7 @@ export class Tag extends BaseModel<Tag, SerializedTag> {
   public color: string | null | undefined;
 
   constructor({ id, name, cookbook, color }: SerializedTag) {
-    super(new TagService());
+    super(AppInjector.injectClass(TagService));
     this._id = id;
     this.name = name;
     this.cookbook = cookbook;
@@ -31,11 +32,11 @@ export class Tag extends BaseModel<Tag, SerializedTag> {
   }
 
   public deserialize(): DeSerializedTag {
-    return new TagService().deserialize(this);
+    return AppInjector.injectClass(TagService).deserialize(this);
   }
 
   public serialize(): SerializedTag {
-    return new TagService().serialize({
+    return AppInjector.injectClass(TagService).serialize({
       _id: this._id,
       name: this.name,
       cookbook: this.cookbook,

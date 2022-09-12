@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { AppInjector } from "../app";
 import UserService from "../services/UserService";
 import { BaseModel } from "./BaseModel";
 
@@ -54,7 +55,7 @@ export class User extends BaseModel<User, SerializedUser> {
     socialLinks?: SocialLinks;
     superAdmin?: boolean;
   }) {
-    super(new UserService());
+    super(AppInjector.injectClass(UserService));
     this._id = id;
     this.discord_discriminator = discordDiscriminator;
     this.discord_id = discordId;
@@ -65,11 +66,11 @@ export class User extends BaseModel<User, SerializedUser> {
   }
 
   deserialize(): DeSerializedUser {
-    return new UserService().deserialize(this);
+    return AppInjector.injectClass(UserService).deserialize(this);
   }
 
   serialize(): SerializedUser {
-    return new UserService().serialize({
+    return AppInjector.injectClass(UserService).serialize({
       _id: this._id,
       discord_discriminator: this.discord_discriminator,
       discord_id: this.discord_id,

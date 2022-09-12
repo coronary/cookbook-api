@@ -5,8 +5,8 @@ import GuideService from "../services/GuideService";
 import { BaseController } from "./BaseController";
 
 export class GuideController extends BaseController<Guide, SerializedGuide> {
-  constructor() {
-    super(Guide, new GuideService(), ROUTES.GUIDES);
+  constructor(guideService: GuideService) {
+    super(Guide, guideService, ROUTES.GUIDES);
   }
 
   @cookbookAuth()
@@ -23,4 +23,6 @@ export class GuideController extends BaseController<Guide, SerializedGuide> {
   async update(req, res) {
     super.update(req, res);
   }
+
+  public static inject = ["guideService"] as const;
 }

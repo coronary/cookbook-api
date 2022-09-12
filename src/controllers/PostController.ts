@@ -5,8 +5,8 @@ import PostService from "../services/PostService";
 import { BaseController } from "./BaseController";
 
 export class PostController extends BaseController<Post, SerializedPost> {
-  constructor() {
-    super(Post, new PostService(), ROUTES.POSTS);
+  constructor(postService: PostService) {
+    super(Post, postService, ROUTES.POSTS);
   }
 
   @cookbookAuth()
@@ -23,4 +23,6 @@ export class PostController extends BaseController<Post, SerializedPost> {
   async update(req, res) {
     super.update(req, res);
   }
+
+  public static inject = ["postService"] as const;
 }
