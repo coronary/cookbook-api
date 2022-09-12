@@ -1,11 +1,14 @@
 import { ROUTES } from "../constants/Constants";
-import { auth } from "../middleware/Auth";
+import { cookbookAuth } from "../middleware/Auth";
 import { superAuth } from "../middleware/SuperAuth";
-import { Cookbook } from "../models/Cookbook";
+import { Cookbook, SerializedCookbook } from "../models/Cookbook";
 import CookbookService from "../services/CookbookService";
 import { BaseController } from "./BaseController";
 
-export class CookbookController extends BaseController<Cookbook> {
+export class CookbookController extends BaseController<
+  Cookbook,
+  SerializedCookbook
+> {
   constructor() {
     super(Cookbook, new CookbookService(), ROUTES.COOKBOOKS);
   }
@@ -20,7 +23,7 @@ export class CookbookController extends BaseController<Cookbook> {
     super.deleteOne(req, res);
   }
 
-  @auth()
+  @cookbookAuth()
   async update(req, res) {
     super.update(req, res);
   }

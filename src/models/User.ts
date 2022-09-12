@@ -11,7 +11,7 @@ export interface SocialLinks {
 
 export interface SerializedUser {
   id?: ObjectId;
-  email: string;
+  discordDiscriminator: string;
   discordId: string;
   discordUsername: string;
   discordAvatar: string;
@@ -20,17 +20,17 @@ export interface SerializedUser {
 }
 
 export interface DeSerializedUser {
-  email: string;
+  discord_discriminator: string;
   discord_id: string;
   discord_username: string;
   discord_avatar: string;
-  social_links: SocialLinks;
-  super_admin: boolean;
+  social_links?: SocialLinks;
+  super_admin?: boolean;
 }
 
-export class User extends BaseModel<User> {
+export class User extends BaseModel<User, SerializedUser> {
   public _id: ObjectId | undefined;
-  public email: string;
+  public discord_discriminator: string;
   public discord_id: string;
   public discord_username: string;
   public discord_avatar: string;
@@ -39,16 +39,24 @@ export class User extends BaseModel<User> {
 
   constructor({
     id,
-    email,
+    discordDiscriminator,
     discordId,
     discordUsername,
     discordAvatar,
-    socialLinks = {},
-    superAdmin = false,
-  }: SerializedUser) {
+    socialLinks,
+    superAdmin,
+  }: {
+    id?: ObjectId;
+    discordDiscriminator: string;
+    discordId: string;
+    discordUsername: string;
+    discordAvatar: string;
+    socialLinks?: SocialLinks;
+    superAdmin?: boolean;
+  }) {
     super(new UserService());
     this._id = id;
-    this.email = email;
+    this.discord_discriminator = discordDiscriminator;
     this.discord_id = discordId;
     this.discord_username = discordUsername;
     this.discord_avatar = discordAvatar;
@@ -63,8 +71,8 @@ export class User extends BaseModel<User> {
   serialize(): SerializedUser {
     return new UserService().serialize({
       _id: this._id,
-      email: this.email,
-      discord_d: this.discord_id,
+      discord_discriminator: this.discord_discriminator,
+      discord_id: this.discord_id,
       discord_username: this.discord_username,
       discord_avatar: this.discord_avatar,
       social_links: this.social_links,

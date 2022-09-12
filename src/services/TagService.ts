@@ -2,7 +2,7 @@ import { COLLECTIONS } from "../db/db";
 import { Tag, DeSerializedTag, SerializedTag } from "../models/Tag";
 import { BaseService } from "./BaseService";
 
-export default class TagService extends BaseService<Tag> {
+export default class TagService extends BaseService<Tag, SerializedTag> {
   constructor() {
     super(COLLECTIONS.GUIDES, Tag);
   }

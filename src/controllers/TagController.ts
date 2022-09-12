@@ -1,25 +1,25 @@
 import { ROUTES } from "../constants/Constants";
-import { auth } from "../middleware/Auth";
-import { Tag } from "../models/Tag";
+import { cookbookAuth } from "../middleware/Auth";
+import { SerializedTag, Tag } from "../models/Tag";
 import TagService from "../services/TagService";
 import { BaseController } from "./BaseController";
 
-export class TagController extends BaseController<Tag> {
+export class TagController extends BaseController<Tag, SerializedTag> {
   constructor() {
     super(Tag, new TagService(), ROUTES.TAGS);
   }
 
-  @auth()
+  @cookbookAuth()
   async create(req, res) {
     super.create(req, res);
   }
 
-  @auth()
+  @cookbookAuth()
   async deleteOne(req, res) {
     super.deleteOne(req, res);
   }
 
-  @auth()
+  @cookbookAuth()
   async update(req, res) {
     super.update(req, res);
   }

@@ -14,16 +14,16 @@ export interface Controller {
   deleteOne: (req, res) => void;
 }
 
-export interface GenericModel<T extends BaseModel<T>> {
+export interface GenericModel<T extends BaseModel<T, M>, M> {
   new (any): T;
 }
 
-export class BaseController<T extends BaseModel<T>> {
+export class BaseController<T extends BaseModel<T, M>, M> {
   public router = Router();
 
   constructor(
-    public model: GenericModel<T>,
-    public service: Service<T>,
+    public model: GenericModel<T, M>,
+    public service: Service<M>,
     public route: string
   ) {
     this.setRoutes = this.setRoutes.bind(this);

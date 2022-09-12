@@ -3,15 +3,15 @@ import { GenericModel } from "../controllers/BaseController";
 import { get, save, getById, deleteOne } from "../db/db";
 import { BaseModel } from "../models/BaseModel";
 
-export interface Service<T> {
-  getById: (id: string) => Promise<T>;
-  get: (any?) => Promise<Array<T>>;
-  save: (any) => Promise<T>;
+export interface Service<M> {
+  getById: (id: string) => Promise<M>;
+  get: (any?) => Promise<Array<M>>;
+  save: (any) => Promise<M>;
   deleteOne: (id: string) => Promise<void>;
 }
 
-export class BaseService<T extends BaseModel<T>> implements Service<T> {
-  constructor(public collection: Collection, public type: GenericModel<T>) {
+export class BaseService<T extends BaseModel<T, M>, M> implements Service<M> {
+  constructor(public collection: Collection, public type: GenericModel<T, M>) {
     this.getById = this.getById.bind(this);
     this.get = this.get.bind(this);
     this.save = this.save.bind(this);
@@ -19,7 +19,7 @@ export class BaseService<T extends BaseModel<T>> implements Service<T> {
     this.deserialize = this.deserialize.bind(this);
   }
 
-  public async getById(id: string): Promise<T> {
+  public async getById(id: string): Promise<M> {
     const document = await getById(this.collection, id);
     if (document == null) {
       throw new Error("Document Not Found");
@@ -27,17 +27,20 @@ export class BaseService<T extends BaseModel<T>> implements Service<T> {
     return new this.type({ ...this.serialize(document) }).serialize();
   }
 
-  public async get(filter?): Promise<Array<T>> {
+  public async get(filter?): Promise<Array<M>> {
     const documents = await get(this.collection, filter);
+
     if (documents == null) {
       throw new Error("Documents Not Found");
     }
-    return documents.map((u) =>
-      new this.type({ ...this.serialize(u) }).serialize()
-    );
+    const serializedDocuments = documents.map((u) => {
+      return new this.type({ ...this.serialize(u) }).serialize();
+    });
+
+    return serializedDocuments;
   }
 
-  public async save(params): Promise<T> {
+  public async save(params): Promise<M> {
     const { id, ...body } = params;
     const document = await save(this.collection, id, this.deserialize(body));
     return new this.type({ ...this.serialize(document) }).serialize();

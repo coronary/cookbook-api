@@ -6,7 +6,10 @@ import {
 } from "../models/Section";
 import { BaseService } from "./BaseService";
 
-export default class SectionService extends BaseService<Section> {
+export default class SectionService extends BaseService<
+  Section,
+  SerializedSection
+> {
   constructor() {
     super(COLLECTIONS.GUIDES, Section);
   }

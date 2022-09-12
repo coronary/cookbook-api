@@ -2,7 +2,7 @@ import { COLLECTIONS } from "../db/db";
 import { Post, DeSerializedPost, SerializedPost } from "../models/Post";
 import { BaseService } from "./BaseService";
 
-export default class PostService extends BaseService<Post> {
+export default class PostService extends BaseService<Post, SerializedPost> {
   constructor() {
     super(COLLECTIONS.GUIDES, Post);
   }

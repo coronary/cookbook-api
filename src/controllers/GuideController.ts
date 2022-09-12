@@ -1,25 +1,25 @@
 import { ROUTES } from "../constants/Constants";
-import { auth } from "../middleware/Auth";
-import { Guide } from "../models/Guide";
+import { cookbookAuth } from "../middleware/Auth";
+import { Guide, SerializedGuide } from "../models/Guide";
 import GuideService from "../services/GuideService";
 import { BaseController } from "./BaseController";
 
-export class GuideController extends BaseController<Guide> {
+export class GuideController extends BaseController<Guide, SerializedGuide> {
   constructor() {
     super(Guide, new GuideService(), ROUTES.GUIDES);
   }
 
-  @auth()
+  @cookbookAuth()
   async create(req, res) {
     super.create(req, res);
   }
 
-  @auth()
+  @cookbookAuth()
   async deleteOne(req, res) {
     super.deleteOne(req, res);
   }
 
-  @auth()
+  @cookbookAuth()
   async update(req, res) {
     super.update(req, res);
   }

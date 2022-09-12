@@ -16,13 +16,13 @@ export interface SerializedPost {
   tags: ObjectId[];
 }
 
-export class Post extends BaseModel<Post> {
+export class Post extends BaseModel<Post, SerializedPost> {
   public _id: ObjectId | undefined;
   public user: ObjectId;
   public body: string;
   public tags: ObjectId[];
 
-  constructor({ id, user, body, tags = [] }: SerializedPost) {
+  constructor({ id, user, body, tags }: SerializedPost) {
     super(new PostService());
     this._id = id;
     this.user = user;

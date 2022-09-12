@@ -6,7 +6,10 @@ import {
 } from "../models/Cookbook";
 import { BaseService } from "./BaseService";
 
-export default class CookbookService extends BaseService<Cookbook> {
+export default class CookbookService extends BaseService<
+  Cookbook,
+  SerializedCookbook
+> {
   constructor() {
     super(COLLECTIONS.COOKBOOKS, Cookbook);
   }

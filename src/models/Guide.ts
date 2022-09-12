@@ -16,13 +16,13 @@ export interface SerializedGuide {
   sections: ObjectId[];
 }
 
-export class Guide extends BaseModel<Guide> {
+export class Guide extends BaseModel<Guide, SerializedGuide> {
   public _id: ObjectId | undefined;
   public name: string;
   public cookbook: ObjectId;
   public sections: ObjectId[];
 
-  constructor({ id, name, cookbook, sections = [] }: SerializedGuide) {
+  constructor({ id, name, cookbook, sections }: SerializedGuide) {
     super(new GuideService());
     this._id = id;
     this.name = name;

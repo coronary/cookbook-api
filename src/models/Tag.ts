@@ -16,7 +16,7 @@ export interface SerializedTag {
   color?: string;
 }
 
-export class Tag extends BaseModel<Tag> {
+export class Tag extends BaseModel<Tag, SerializedTag> {
   public _id: ObjectId | undefined;
   public name: string;
   public cookbook: ObjectId;

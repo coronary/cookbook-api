@@ -2,7 +2,7 @@ import { COLLECTIONS } from "../db/db";
 import { Guide, DeSerializedGuide, SerializedGuide } from "../models/Guide";
 import { BaseService } from "./BaseService";
 
-export default class GuideService extends BaseService<Guide> {
+export default class GuideService extends BaseService<Guide, SerializedGuide> {
   constructor() {
     super(COLLECTIONS.GUIDES, Guide);
   }

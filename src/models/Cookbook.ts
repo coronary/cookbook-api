@@ -24,12 +24,12 @@ export interface SerializedCookbook {
   avatarUrl?: string;
 }
 
-export class Cookbook extends BaseModel<Cookbook> {
+export class Cookbook extends BaseModel<Cookbook, SerializedCookbook> {
   public _id: ObjectId | undefined;
   public name: string;
   public streams: string[];
   public roles: string[];
-  public preview = false;
+  public preview;
   public guides: any[];
   public banner_url: string | undefined;
   public avatar_url: string | undefined;
@@ -37,10 +37,10 @@ export class Cookbook extends BaseModel<Cookbook> {
   constructor({
     id,
     name,
-    streams = [],
-    roles = [],
-    preview = false,
-    guides = [],
+    streams,
+    roles,
+    preview,
+    guides,
     bannerUrl,
     avatarUrl,
   }: SerializedCookbook) {

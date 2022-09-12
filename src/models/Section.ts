@@ -16,13 +16,13 @@ export interface SerializedSection {
   tags: ObjectId[];
 }
 
-export class Section extends BaseModel<Section> {
+export class Section extends BaseModel<Section, SerializedSection> {
   public _id: ObjectId | undefined;
   public name: string;
   public body: string;
   public tags: ObjectId[];
 
-  constructor({ id, name, body, tags = [] }: SerializedSection) {
+  constructor({ id, name, body, tags }: SerializedSection) {
     super(new SectionService());
     this._id = id;
     this.name = name;
