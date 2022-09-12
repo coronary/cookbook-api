@@ -1,1 +1,9 @@
 # api
+
+### `.env`
+```
+SESSION_SECRET = "XXXXXX"
+DATABASE_URL = "XXXXXX"
+DISCORD_ID = "XXXXXX"
+DISCORD_SECRET = "XXXXXX"
+```
