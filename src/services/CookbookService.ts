@@ -15,11 +15,11 @@ export default class CookbookService extends BaseService<Cookbook> {
     const { name, streams, roles, preview, guides, bannerUrl, avatarUrl } =
       document;
     return {
-      name: name,
-      streams: streams,
-      roles: roles,
-      preview: preview,
-      guides: guides,
+      name,
+      streams,
+      roles,
+      preview,
+      guides,
       banner_url: bannerUrl,
       avatar_url: avatarUrl,
     };
@@ -29,11 +29,11 @@ export default class CookbookService extends BaseService<Cookbook> {
     const { _id, name, streams, roles, preview, guides, banner_url } = document;
     return {
       id: _id,
-      name: name,
-      streams: streams,
-      roles: roles,
-      preview: preview,
-      guides: guides,
+      name,
+      streams,
+      roles,
+      preview,
+      guides,
       bannerUrl: banner_url,
     };
   }

@@ -17,7 +17,7 @@ export default class UserService extends BaseService<User> {
       superAdmin,
     } = model;
     return {
-      email: email,
+      email,
       discord_id: discordId,
       discord_username: discordUsername,
       discord_avatar: discordAvatar,
@@ -38,7 +38,7 @@ export default class UserService extends BaseService<User> {
     } = document;
     return {
       id: _id,
-      email: email,
+      email,
       discordId: discord_id,
       discordUsername: discord_username,
       discordAvatar: discord_avatar,

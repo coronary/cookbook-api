@@ -2,9 +2,14 @@ import { MongoClient, Db, Collection, Document, ObjectId } from "mongodb";
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
-export const COLLECTIONS: { COOKBOOKS: Collection; USERS: Collection } = {
+export const COLLECTIONS: {
+  COOKBOOKS: Collection;
+  USERS: Collection;
+  GUIDES: Collection;
+} = {
   COOKBOOKS: undefined,
   USERS: undefined,
+  GUIDES: undefined,
 };
 
 export async function dbConnect() {

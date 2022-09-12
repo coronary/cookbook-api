@@ -9,6 +9,9 @@ import DiscordStrategy, { scopes } from "../middleware/DiscordStrategy";
 import { ROUTES } from "../constants/Constants";
 import { UserController } from "../controllers/UserController";
 import { handleError } from "../middleware/ErrorHandler";
+import { GuideController } from "../controllers/GuideController";
+import { SectionController } from "../controllers/SectionController";
+import { TagController } from "../controllers/TagController";
 
 class App {
   public app: Application;
@@ -49,9 +52,16 @@ class App {
 
     const cookbookController = new CookbookController();
     const userController = new UserController();
+    const guideController = new GuideController();
+    const sectionController = new SectionController();
+    const tagController = new TagController();
+
     this.app.use(`/${ROUTES.COOKBOOKS}`, cookbookController.router);
     this.app.use(`/${ROUTES.USERS}`, userController.router);
-    this.app;
+    this.app.use(`/${ROUTES.GUIDES}`, guideController.router);
+    this.app.use(`/${ROUTES.SECTIONS}`, sectionController.router);
+    this.app.use(`/${ROUTES.TAGS}`, tagController.router);
+
     // this.app.get(
     //   "/login",
     //   passport.authenticate("discord", { scope: scopes, prompt: prompt }),
