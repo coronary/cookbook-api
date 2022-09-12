@@ -1,12 +1,8 @@
-import { MongoClient, Db, Collection, Document, ObjectId } from "mongodb";
+import { MongoClient, Db, Collection, Document, ObjectId, ReturnDocument } from "mongodb";
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
-export const COLLECTIONS: {
-  COOKBOOKS: Collection;
-  USERS: Collection;
-  GUIDES: Collection;
-} = {
+export const COLLECTIONS: {[collection: string]: Collection} = {
   COOKBOOKS: undefined,
   USERS: undefined,
   GUIDES: undefined,
@@ -48,10 +44,9 @@ export async function save(
 ): Promise<Document> {
   const filter = { _id: new ObjectId(id) };
   const update = { $set: { ...body } };
-  const options = { upsert: true, returnDocument: "after" };
-  // @ts-expect-error
+  const options = { upsert: true, returnDocument: ReturnDocument.AFTER };
+
   const document = await collection.findOneAndUpdate(filter, update, options);
-  // @ts-expect-error
   return document.value;
 }
 

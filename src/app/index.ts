@@ -14,6 +14,24 @@ import { SectionController } from "../controllers/SectionController";
 import { TagController } from "../controllers/TagController";
 import { LoginController } from "../controllers/LoginController";
 import MongoStore from "connect-mongo";
+import { createInjector } from "typed-inject";
+import CookbookService from "../services/CookbookService";
+import UserService from "../services/UserService";
+import GuideService from "../services/GuideService";
+import PostService from "../services/PostService";
+import SectionService from "../services/SectionService";
+import TagService from "../services/TagService";
+import { PostController } from "../controllers/PostController";
+
+export const AppInjector = createInjector()
+  .provideClass("cookbookService", CookbookService)
+  .provideClass("userService", UserService)
+  .provideClass("guideService", GuideService)
+  .provideClass("postService", PostService)
+  .provideClass("sectionService", SectionService)
+  .provideClass("tagService", TagService);
+
+const bodySizeLimit = "50mb";
 
 class App {
   public app: Application;
@@ -33,8 +51,10 @@ class App {
       done(null, user);
     });
     passport.use(DiscordStrategy);
-    this.app.use(bodyParser.json({ limit: "50mb" }));
-    this.app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+    this.app.use(bodyParser.json({ limit: bodySizeLimit }));
+    this.app.use(
+      bodyParser.urlencoded({ limit: bodySizeLimit, extended: true })
+    );
     this.app.use(cors({ credentials: true, sameSite: "none" }));
     this.app.use(
       session({
@@ -52,11 +72,12 @@ class App {
     await dbConnect();
 
     const loginController = new LoginController();
-    const cookbookController = new CookbookController();
-    const userController = new UserController();
-    const guideController = new GuideController();
-    const sectionController = new SectionController();
-    const tagController = new TagController();
+    const cookbookController = AppInjector.injectClass(CookbookController);
+    const userController = AppInjector.injectClass(UserController);
+    const guideController = AppInjector.injectClass(GuideController);
+    const sectionController = AppInjector.injectClass(SectionController);
+    const tagController = AppInjector.injectClass(TagController);
+    const postController = AppInjector.injectClass(PostController);
 
     this.app.use(`/${ROUTES.LOGIN}`, loginController.router);
     this.app.use(`/${ROUTES.COOKBOOKS}`, cookbookController.router);
@@ -64,6 +85,7 @@ class App {
     this.app.use(`/${ROUTES.GUIDES}`, guideController.router);
     this.app.use(`/${ROUTES.SECTIONS}`, sectionController.router);
     this.app.use(`/${ROUTES.TAGS}`, tagController.router);
+    this.app.use(`/${ROUTES.POSTS}`, postController.router);
 
     this.app.use(handleError);
   }

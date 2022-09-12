@@ -6,7 +6,7 @@ export function handleError(error, req, res, next) {
   res.status(error.status || 500).json({ message: error.message });
 }
 
-export function Catch(): any {
+export function tryCatch(): any {
   return (target, key, descriptor) => {
     const fn = descriptor.value;
     descriptor.value = async function (...args) {

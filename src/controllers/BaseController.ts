@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { Catch } from "../middleware/ErrorHandler";
+import { tryCatch } from "../middleware/ErrorHandler";
 import { BaseModel } from "../models/BaseModel";
 import { Service } from "../services/BaseService";
 import { logRoutes } from "../utils/Logging";
+import autoBind from "../utils/autobind";
 
 export interface Controller {
   router: Router;
@@ -26,12 +27,8 @@ export class BaseController<T extends BaseModel<T, M>, M> {
     public service: Service<M>,
     public route: string
   ) {
-    this.setRoutes = this.setRoutes.bind(this);
-    this.getById = this.getById.bind(this);
-    this.getAll = this.getAll.bind(this);
-    this.create = this.create.bind(this);
-    this.update = this.update.bind(this);
-    this.deleteOne = this.deleteOne.bind(this);
+    autoBind(this);
+
     this.setRoutes();
     logRoutes(`/${this.route}`, this.router);
   }
@@ -44,7 +41,7 @@ export class BaseController<T extends BaseModel<T, M>, M> {
     this.router.delete(this.detailRoute(), this.deleteOne);
   }
 
-  @Catch()
+  @tryCatch()
   async getAll(req, res) {
     const model = await this.service.get();
     res.send(model);
@@ -54,7 +51,7 @@ export class BaseController<T extends BaseModel<T, M>, M> {
     return `/:${this.route}`;
   }
 
-  @Catch()
+  @tryCatch()
   async create(req, res) {
     const { body } = req;
     const model = new this.model({
@@ -63,7 +60,7 @@ export class BaseController<T extends BaseModel<T, M>, M> {
     res.send(await model.save());
   }
 
-  @Catch()
+  @tryCatch()
   async update(req, res) {
     const { body, params } = req;
     const id = params[this.route];
@@ -72,14 +69,14 @@ export class BaseController<T extends BaseModel<T, M>, M> {
     res.send(await newModel.save());
   }
 
-  @Catch()
+  @tryCatch()
   async deleteOne(req, res) {
     const id = req.params[this.route];
     await this.service.deleteOne(id);
     res.send();
   }
 
-  @Catch()
+  @tryCatch()
   async getById(req, res) {
     const id = req.params[this.route];
     const model = await this.service.getById(id);

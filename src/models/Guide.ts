@@ -1,6 +1,7 @@
 import GuideService from "../services/GuideService";
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
+import { AppInjector } from "../app";
 
 export interface DeSerializedGuide {
   _id?: ObjectId;
@@ -23,7 +24,7 @@ export class Guide extends BaseModel<Guide, SerializedGuide> {
   public sections: ObjectId[];
 
   constructor({ id, name, cookbook, sections }: SerializedGuide) {
-    super(new GuideService());
+    super(AppInjector.injectClass(GuideService));
     this._id = id;
     this.name = name;
     this.cookbook = cookbook;
@@ -31,11 +32,11 @@ export class Guide extends BaseModel<Guide, SerializedGuide> {
   }
 
   public deserialize(): DeSerializedGuide {
-    return new GuideService().deserialize(this);
+    return AppInjector.injectClass(GuideService).deserialize(this);
   }
 
   public serialize(): SerializedGuide {
-    return new GuideService().serialize({
+    return AppInjector.injectClass(GuideService).serialize({
       _id: this._id,
       name: this.name,
       cookbook: this.cookbook,

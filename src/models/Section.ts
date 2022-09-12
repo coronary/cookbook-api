@@ -1,6 +1,7 @@
 import SectionService from "../services/SectionService";
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
+import { AppInjector } from "../app";
 
 export interface DeSerializedSection {
   _id?: ObjectId;
@@ -23,7 +24,7 @@ export class Section extends BaseModel<Section, SerializedSection> {
   public tags: ObjectId[];
 
   constructor({ id, name, body, tags }: SerializedSection) {
-    super(new SectionService());
+    super(AppInjector.injectClass(SectionService));
     this._id = id;
     this.name = name;
     this.body = body;
@@ -31,11 +32,11 @@ export class Section extends BaseModel<Section, SerializedSection> {
   }
 
   public deserialize(): DeSerializedSection {
-    return new SectionService().deserialize(this);
+    return AppInjector.injectClass(SectionService).deserialize(this);
   }
 
   public serialize(): SerializedSection {
-    return new SectionService().serialize({
+    return AppInjector.injectClass(SectionService).serialize({
       _id: this._id,
       name: this.name,
       body: this.body,

@@ -1,9 +1,9 @@
 import { Service } from "../services/BaseService";
+import autoBind from "../utils/autobind";
 
 export class BaseModel<T, M> {
   constructor(public service: Service<M>) {
-    this.save = this.save.bind(this);
-    this.serialize = this.serialize.bind(this);
+    autoBind(this);
   }
 
   async save(): Promise<M> {

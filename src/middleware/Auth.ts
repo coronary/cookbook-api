@@ -1,5 +1,8 @@
 import CookbookService from "../services/CookbookService";
 import createError from "http-errors";
+import { AppInjector } from "../app";
+
+const authRoles = ["admin", "chef"];
 
 export const cookbookAuth = (): any => {
   return (target: any, propertyKey: string, descriptor: any) => {
@@ -17,14 +20,11 @@ export const cookbookAuth = (): any => {
         return fn.apply(this, args);
       }
 
-      const cookbookService = new CookbookService();
+      const cookbookService = AppInjector.injectClass(CookbookService);
       const cookbook = await cookbookService.getById(cookbookId);
 
-      const authRoles = ["admin", "chef"];
-
       if (
-        cookbook &&
-        cookbook.roles &&
+        cookbook?.roles &&
         authRoles.includes(cookbook.roles[user.id])
       ) {
         return fn.apply(this, args);

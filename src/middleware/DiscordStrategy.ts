@@ -1,5 +1,6 @@
 import { Strategy } from "passport-discord";
-import { SerializedUser, User } from "../models/User";
+import { AppInjector } from "../app";
+import { User } from "../models/User";
 import UserService from "../services/UserService";
 
 export const scopes = ["identify", "email", "guilds", "guilds.join"];
@@ -15,17 +16,19 @@ export default new Strategy(
   },
   async function (accessToken, refreshToken, profile, next) {
     try {
-      const userService = new UserService();
+      const userService = AppInjector.injectClass(UserService);
       const existingUsers = await userService.get({ discord_id: profile.id });
       const existingUser = existingUsers[0];
+
       const u = new User({
-        ...(existingUsers[0] != null && { id: existingUser.id }),
+        id: existingUser?.id,
         discordId: profile.id,
         discordUsername: profile.username,
         discordAvatar: profile.avatar,
         discordDiscriminator: profile.discriminator,
       });
       const savedUser = await u.save();
+
       return next(null, savedUser);
     } catch (err) {
       return next(err);

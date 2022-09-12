@@ -9,8 +9,8 @@ export class CookbookController extends BaseController<
   Cookbook,
   SerializedCookbook
 > {
-  constructor() {
-    super(Cookbook, new CookbookService(), ROUTES.COOKBOOKS);
+  constructor(cookBookService: CookbookService) {
+    super(Cookbook, cookBookService, ROUTES.COOKBOOKS);
   }
 
   @superAuth()
@@ -27,4 +27,6 @@ export class CookbookController extends BaseController<
   async update(req, res) {
     super.update(req, res);
   }
+
+  public static inject = ["cookbookService"] as const;
 }

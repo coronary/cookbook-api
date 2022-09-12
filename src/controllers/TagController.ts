@@ -5,8 +5,8 @@ import TagService from "../services/TagService";
 import { BaseController } from "./BaseController";
 
 export class TagController extends BaseController<Tag, SerializedTag> {
-  constructor() {
-    super(Tag, new TagService(), ROUTES.TAGS);
+  constructor(tagService: TagService) {
+    super(Tag, tagService, ROUTES.TAGS);
   }
 
   @cookbookAuth()
@@ -23,4 +23,6 @@ export class TagController extends BaseController<Tag, SerializedTag> {
   async update(req, res) {
     super.update(req, res);
   }
+
+  public static inject = ["tagService"] as const;
 }

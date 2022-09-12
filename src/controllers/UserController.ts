@@ -6,8 +6,8 @@ import UserService from "../services/UserService";
 import { BaseController } from "./BaseController";
 
 export class UserController extends BaseController<User, SerializedUser> {
-  constructor() {
-    super(User, new UserService(), ROUTES.USERS);
+  constructor(userService: UserService) {
+    super(User, userService, ROUTES.USERS);
   }
 
   @superAuth()
@@ -24,4 +24,6 @@ export class UserController extends BaseController<User, SerializedUser> {
   async update(req, res) {
     super.update(req, res);
   }
+
+  public static inject = ["userService"] as const;
 }
