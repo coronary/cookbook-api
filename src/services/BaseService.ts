@@ -2,6 +2,7 @@ import { Collection } from "mongodb";
 import { GenericModel } from "../controllers/BaseController";
 import { get, save, getById, deleteOne } from "../db/db";
 import { BaseModel } from "../models/BaseModel";
+import autoBind from "../utils/autobind";
 
 export interface Service<M> {
   getById: (id: string) => Promise<M>;
@@ -12,11 +13,7 @@ export interface Service<M> {
 
 export class BaseService<T extends BaseModel<T, M>, M> implements Service<M> {
   constructor(public collection: Collection, public type: GenericModel<T, M>) {
-    this.getById = this.getById.bind(this);
-    this.get = this.get.bind(this);
-    this.save = this.save.bind(this);
-    this.serialize = this.serialize.bind(this);
-    this.deserialize = this.deserialize.bind(this);
+    autoBind(this);
   }
 
   public async getById(id: string): Promise<M> {

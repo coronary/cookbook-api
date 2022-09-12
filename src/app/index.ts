@@ -14,6 +14,12 @@ import { SectionController } from "../controllers/SectionController";
 import { TagController } from "../controllers/TagController";
 import { LoginController } from "../controllers/LoginController";
 import MongoStore from "connect-mongo";
+import { createInjector } from 'typed-inject';
+import CookbookService from "../services/CookbookService";
+
+export const AppInjector = createInjector().provideClass('cookbookService', CookbookService);
+
+const bodySizeLimit = "50mb";
 
 class App {
   public app: Application;
@@ -33,8 +39,8 @@ class App {
       done(null, user);
     });
     passport.use(DiscordStrategy);
-    this.app.use(bodyParser.json({ limit: "50mb" }));
-    this.app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+    this.app.use(bodyParser.json({ limit: bodySizeLimit }));
+    this.app.use(bodyParser.urlencoded({ limit: bodySizeLimit, extended: true }));
     this.app.use(cors({ credentials: true, sameSite: "none" }));
     this.app.use(
       session({
@@ -52,7 +58,7 @@ class App {
     await dbConnect();
 
     const loginController = new LoginController();
-    const cookbookController = new CookbookController();
+    const cookbookController = AppInjector.injectClass(CookbookController);
     const userController = new UserController();
     const guideController = new GuideController();
     const sectionController = new SectionController();
