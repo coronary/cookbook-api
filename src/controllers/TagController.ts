@@ -1,27 +1,11 @@
 import { ROUTES } from "../constants/Constants";
-import { cookbookAuth } from "../middleware/Auth";
 import { SerializedTag, Tag } from "../models/Tag";
 import TagService from "../services/TagService";
-import { BaseController } from "./BaseController";
+import { CookbookBaseController } from "./CookbookBaseController";
 
-export class TagController extends BaseController<Tag, SerializedTag> {
+export class TagController extends CookbookBaseController<Tag, SerializedTag> {
   constructor(tagService: TagService) {
     super(Tag, tagService, ROUTES.TAGS);
-  }
-
-  @cookbookAuth()
-  async create(req, res) {
-    super.create(req, res);
-  }
-
-  @cookbookAuth()
-  async deleteOne(req, res) {
-    super.deleteOne(req, res);
-  }
-
-  @cookbookAuth()
-  async update(req, res) {
-    super.update(req, res);
   }
 
   public static inject = ["tagService"] as const;

@@ -1,11 +1,21 @@
-import { MongoClient, Db, Collection, Document, ObjectId, ReturnDocument } from "mongodb";
+import {
+  MongoClient,
+  Db,
+  Collection,
+  Document,
+  ObjectId,
+  ReturnDocument,
+} from "mongodb";
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
-export const COLLECTIONS: {[collection: string]: Collection} = {
+export const COLLECTIONS: { [collection: string]: Collection } = {
   COOKBOOKS: undefined,
   USERS: undefined,
   GUIDES: undefined,
+  TAGS: undefined,
+  POSTS: undefined,
+  SECTIONS: undefined,
 };
 
 export async function dbConnect() {
@@ -15,6 +25,10 @@ export async function dbConnect() {
     const db: Db = client.db(process.env.DB_NAME);
     COLLECTIONS.COOKBOOKS = db.collection("cookbooks");
     COLLECTIONS.USERS = db.collection("users");
+    COLLECTIONS.TAGS = db.collection("tags");
+    COLLECTIONS.GUIDES = db.collection("guides");
+    COLLECTIONS.POSTS = db.collection("posts");
+    COLLECTIONS.SECTIONS = db.collection("sections");
   } catch (error) {
     console.error("Connection to MongoDB Atlas failed!", error);
     process.exit();

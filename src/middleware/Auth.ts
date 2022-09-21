@@ -21,16 +21,18 @@ export const cookbookAuth = (): any => {
       }
 
       const cookbookService = AppInjector.injectClass(CookbookService);
-      const cookbook = await cookbookService.getById(cookbookId);
 
-      if (
-        cookbook?.roles &&
-        authRoles.includes(cookbook.roles[user.id])
-      ) {
-        return fn.apply(this, args);
+      try {
+        const cookbook = await cookbookService.getById(cookbookId);
+
+        if (cookbook?.roles && authRoles.includes(cookbook.roles[user.id])) {
+          return fn.apply(this, args);
+        }
+
+        return next(createError(401, "Unauthorized"));
+      } catch (err) {
+        return next(createError(500, err));
       }
-
-      return next(createError(401, "Unauthorized"));
     };
   };
 };
