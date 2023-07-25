@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import { ROUTES } from "../constants/Constants";
 import { cookbookId } from "../middleware/CookbookId";
 import { File } from "../models/File";
@@ -19,7 +18,8 @@ export class FileController extends CookbookBaseController<File> {
   @cookbookId()
   async getRandomGif(req, res) {
     const { cookbook } = req.body;
-    const files = await this.service.get({ cookbook: new ObjectId(cookbook) });
+    const files = await this.service.get({ cookbook });
+
     res.send(files[Math.floor(Math.random() * files.length)]);
   }
 

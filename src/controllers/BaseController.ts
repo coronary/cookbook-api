@@ -81,6 +81,6 @@ export class BaseController<T extends BaseModel> {
     const id = req.params[this.route];
     const { populate } = req.query;
     const model = await this.service.getById(id);
-    res.send(populate ? model.sanitize() : await model.sanitizeAsync());
+    res.send(populate ? model.sanitizeAsync() : await model.sanitize());
   }
 }
