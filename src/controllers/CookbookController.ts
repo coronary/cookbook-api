@@ -5,6 +5,7 @@ import { superAuth } from "../middleware/SuperAuth";
 import { Cookbook } from "../models/Cookbook";
 import CookbookService from "../services/CookbookService";
 import { BaseController } from "./BaseController";
+import { FileController } from "./FileController";
 import { GuideController } from "./GuideController";
 import { PostController } from "./PostController";
 import { SectionController } from "./SectionController";
@@ -20,11 +21,13 @@ export class CookbookController extends BaseController<Cookbook> {
     const sectionController = AppInjector.injectClass(SectionController);
     const tagController = AppInjector.injectClass(TagController);
     const postController = AppInjector.injectClass(PostController);
+    const fileController = AppInjector.injectClass(FileController);
 
     this.router.use(this.buildRoute(ROUTES.GUIDES), guideController.router);
     this.router.use(this.buildRoute(ROUTES.SECTIONS), sectionController.router);
     this.router.use(this.buildRoute(ROUTES.TAGS), tagController.router);
     this.router.use(this.buildRoute(ROUTES.POSTS), postController.router);
+    this.router.use(this.buildRoute(ROUTES.FILES), fileController.router);
   }
 
   private buildRoute(route) {

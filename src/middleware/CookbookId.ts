@@ -1,4 +1,5 @@
 import createError from "http-errors";
+import { ObjectId } from "mongodb";
 
 export const cookbookId = (): any => {
   return (target: any, propertyKey: string, descriptor: any) => {
@@ -11,7 +12,7 @@ export const cookbookId = (): any => {
         return next(createError(404, "Cookbook not found"));
       }
 
-      req.body.cookbook = cookbookId;
+      req.body.cookbook = new ObjectId(cookbookId);
       return fn.apply(this, args);
     };
   };

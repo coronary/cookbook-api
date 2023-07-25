@@ -7,6 +7,7 @@ export const ROUTES = {
   TAGS: "tags",
   POSTS: "posts",
   LOGIN: "login",
+  FILES: "media",
 };
 
 export const MediaRoutes = {

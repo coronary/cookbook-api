@@ -20,14 +20,7 @@ import SectionService from "../services/SectionService";
 import TagService from "../services/TagService";
 import { GameController } from "../controllers/GameController";
 import GameService from "../services/GameService";
-import {
-  syncCookbooks,
-  syncGames,
-  syncGuides,
-  syncPosts,
-  syncTags,
-  syncUsers,
-} from "../db/sync";
+import FileService from "../services/FileService";
 
 export const AppInjector = createInjector()
   .provideClass("gameService", GameService)
@@ -36,7 +29,8 @@ export const AppInjector = createInjector()
   .provideClass("guideService", GuideService)
   .provideClass("postService", PostService)
   .provideClass("sectionService", SectionService)
-  .provideClass("tagService", TagService);
+  .provideClass("tagService", TagService)
+  .provideClass("fileService", FileService);
 
 const bodySizeLimit = "50mb";
 
