@@ -89,7 +89,6 @@ export async function syncTags() {
 
 export async function syncGuides() {
   const depricatedGuides = await get(DEPRICATED_COLLECTIONS.GUIDES);
-  //const guides = depricatedGuides.slice(0, 5);
   let index = 1;
   for (const guide of depricatedGuides) {
     logger.info(`UPLOADING GUIDE: ${index} / ${depricatedGuides.length}`);
@@ -106,6 +105,7 @@ export async function syncGuides() {
       const sectionModel = {
         name: toTitle(section.title),
         body: await replaceGfy(guide.cookbook, section.body),
+        cookbook: guide.cookbook,
       };
 
       const document = await save(COLLECTIONS.SECTIONS, sectionModel);
@@ -121,7 +121,6 @@ export async function syncGuides() {
 
 export async function syncPosts() {
   const depricatedPosts = await get(DEPRICATED_COLLECTIONS.POSTS);
-  // const posts = depricatedPosts.slice(0, 10);
   let index = 1;
 
   for (const post of depricatedPosts) {
