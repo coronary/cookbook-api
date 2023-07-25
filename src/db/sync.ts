@@ -8,8 +8,8 @@ import { logger } from "../utils/Logging";
 const gfyRegex = /(https:\/\/)(thumbs\.)?(gfycat)[^\s,]*/g;
 
 const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET,
+  accessKeyId: process.env.BUCKET_ACCESS_KEY,
+  secretAccessKey: process.env.BUCKET_SECRET,
 });
 
 export async function syncGames() {
@@ -206,7 +206,7 @@ async function replaceGfy(cookbookId, body) {
         });
 
         const params = {
-          Bucket: process.env.S3_BUCKET,
+          Bucket: process.env.BUCKET,
           Key: `${cookbookId}/${document._id}.mp4`,
           Body: response.data,
           ContentType: "video/mp4",
@@ -224,7 +224,7 @@ async function replaceGfy(cookbookId, body) {
         });
 
         const params = {
-          Bucket: process.env.S3_BUCKET,
+          Bucket: process.env.BUCKET,
           Key: `${cookbookId}/${document._id}.gif`,
           Body: response.data,
           ContentType: "image/gif",
