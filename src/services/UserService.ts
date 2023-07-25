@@ -1,15 +1,25 @@
-import { COLLECTIONS } from "../db/db";
+import { COLLECTIONS, get } from "../db/db";
 import { DeSerializedUser, SerializedUser, User } from "../models/User";
 import { BaseService } from "./BaseService";
 
-export default class UserService extends BaseService<User, SerializedUser> {
+export default class UserService extends BaseService<User> {
   constructor() {
     super(COLLECTIONS.USERS, User);
   }
 
+  public async getByDiscordId(discordId: string) {
+    const documents = await get(this.collection, { discord_id: discordId });
+
+    if (documents == null) {
+      throw new Error("Documents Not Found");
+    }
+
+    return new this.type({ ...this.serialize(documents[0]) });
+  }
+
   public deserialize(model): DeSerializedUser {
     const {
-      discordDiscriminator,
+      id,
       discordId,
       discordUsername,
       discordAvatar,
@@ -18,17 +28,18 @@ export default class UserService extends BaseService<User, SerializedUser> {
     } = model;
 
     const deserilizedUser: DeSerializedUser = {
-      discord_discriminator: discordDiscriminator,
+      _id: id,
       discord_id: discordId,
       discord_username: discordUsername,
       discord_avatar: discordAvatar,
+      social_links: socialLinks,
     };
 
-    if (superAdmin !== undefined) {
+    if (superAdmin != null) {
       deserilizedUser.super_admin = superAdmin;
     }
 
-    if (socialLinks !== undefined) {
+    if (socialLinks != null) {
       deserilizedUser.social_links = socialLinks;
     }
 
@@ -38,7 +49,6 @@ export default class UserService extends BaseService<User, SerializedUser> {
   public serialize(document): SerializedUser {
     const {
       _id,
-      discord_discriminator,
       discord_id,
       discord_username,
       discord_avatar,
@@ -47,7 +57,6 @@ export default class UserService extends BaseService<User, SerializedUser> {
     } = document;
     return {
       id: _id,
-      discordDiscriminator: discord_discriminator,
       discordId: discord_id,
       discordUsername: discord_username,
       discordAvatar: discord_avatar,

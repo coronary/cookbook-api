@@ -1,11 +1,11 @@
 import { ROUTES } from "../constants/Constants";
 import { cookbookAuth } from "../middleware/Auth";
 import { superAuth } from "../middleware/SuperAuth";
-import { SerializedUser, User } from "../models/User";
+import { User } from "../models/User";
 import UserService from "../services/UserService";
 import { BaseController } from "./BaseController";
 
-export class UserController extends BaseController<User, SerializedUser> {
+export class UserController extends BaseController<User> {
   constructor(userService: UserService) {
     super(User, userService, ROUTES.USERS);
   }

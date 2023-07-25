@@ -1,6 +1,4 @@
 import { ObjectId } from "mongodb";
-import { AppInjector } from "../app";
-import UserService from "../services/UserService";
 import { BaseModel } from "./BaseModel";
 
 export interface SocialLinks {
@@ -10,9 +8,17 @@ export interface SocialLinks {
   patreon?: string;
 }
 
+export interface SanitizedUser {
+  id?: ObjectId;
+  discordId: string;
+  discordUsername: string;
+  discordAvatar: string;
+  socialLinks?: SocialLinks;
+  superAdmin?: boolean;
+}
+
 export interface SerializedUser {
   id?: ObjectId;
-  discordDiscriminator: string;
   discordId: string;
   discordUsername: string;
   discordAvatar: string;
@@ -21,63 +27,62 @@ export interface SerializedUser {
 }
 
 export interface DeSerializedUser {
-  discord_discriminator: string;
+  _id: ObjectId;
   discord_id: string;
   discord_username: string;
   discord_avatar: string;
-  social_links?: SocialLinks;
+  social_links: SocialLinks;
   super_admin?: boolean;
 }
 
-export class User extends BaseModel<User, SerializedUser> {
-  public _id: ObjectId | undefined;
-  public discord_discriminator: string;
-  public discord_id: string;
-  public discord_username: string;
-  public discord_avatar: string;
-  public social_links: SocialLinks;
-  public super_admin: boolean;
+export class User extends BaseModel {
+  public id: ObjectId | undefined;
+  public discordId: string;
+  public discordUsername: string;
+  public discordAvatar: string;
+  public socialLinks: SocialLinks;
+  public superAdmin: boolean;
 
   constructor({
     id,
-    discordDiscriminator,
     discordId,
     discordUsername,
     discordAvatar,
-    socialLinks,
-    superAdmin,
+    socialLinks = {},
+    superAdmin = false,
   }: {
     id?: ObjectId;
-    discordDiscriminator: string;
     discordId: string;
     discordUsername: string;
     discordAvatar: string;
     socialLinks?: SocialLinks;
     superAdmin?: boolean;
   }) {
-    super(AppInjector.injectClass(UserService));
-    this._id = id;
-    this.discord_discriminator = discordDiscriminator;
-    this.discord_id = discordId;
-    this.discord_username = discordUsername;
-    this.discord_avatar = discordAvatar;
-    this.social_links = socialLinks;
-    this.super_admin = superAdmin;
+    super();
+    this.id = id;
+    this.discordId = discordId;
+    this.discordUsername = discordUsername;
+    this.discordAvatar = discordAvatar;
+    this.socialLinks = socialLinks;
+    this.superAdmin = superAdmin;
   }
 
-  deserialize(): DeSerializedUser {
-    return AppInjector.injectClass(UserService).deserialize(this);
-  }
+  public sanitize(): SanitizedUser {
+    const rv: SanitizedUser = {
+      id: this.id,
+      discordId: this.discordId,
+      discordUsername: this.discordUsername,
+      discordAvatar: this.discordAvatar,
+    };
 
-  serialize(): SerializedUser {
-    return AppInjector.injectClass(UserService).serialize({
-      _id: this._id,
-      discord_discriminator: this.discord_discriminator,
-      discord_id: this.discord_id,
-      discord_username: this.discord_username,
-      discord_avatar: this.discord_avatar,
-      social_links: this.social_links,
-      super_admin: this.super_admin,
-    });
+    if (this.socialLinks != null) {
+      rv.socialLinks = this.socialLinks;
+    }
+
+    if (this.superAdmin) {
+      rv.superAdmin = this.superAdmin;
+    }
+
+    return rv;
   }
 }

@@ -2,8 +2,6 @@ import CookbookService from "../services/CookbookService";
 import createError from "http-errors";
 import { AppInjector } from "../app";
 
-const authRoles = ["admin", "chef"];
-
 export const cookbookAuth = (): any => {
   return (target: any, propertyKey: string, descriptor: any) => {
     const fn = descriptor.value;
@@ -25,7 +23,7 @@ export const cookbookAuth = (): any => {
       try {
         const cookbook = await cookbookService.getById(cookbookId);
 
-        if (cookbook?.roles && authRoles.includes(cookbook.roles[user.id])) {
+        if (cookbook != null && cookbook.authUser(user.id)) {
           return fn.apply(this, args);
         }
 

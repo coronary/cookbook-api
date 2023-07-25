@@ -1,12 +1,9 @@
 import { ROUTES } from "../constants/Constants";
-import { Guide, SerializedGuide } from "../models/Guide";
+import { Guide } from "../models/Guide";
 import GuideService from "../services/GuideService";
 import { CookbookBaseController } from "./CookbookBaseController";
 
-export class GuideController extends CookbookBaseController<
-  Guide,
-  SerializedGuide
-> {
+export class GuideController extends CookbookBaseController<Guide> {
   constructor(guideService: GuideService) {
     super(Guide, guideService, ROUTES.GUIDES);
   }

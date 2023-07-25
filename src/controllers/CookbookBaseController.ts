@@ -6,12 +6,11 @@ import { Service } from "../services/BaseService";
 import { BaseController, GenericModel } from "./BaseController";
 
 export class CookbookBaseController<
-  T extends BaseModel<T, M>,
-  M
-> extends BaseController<T, M> {
+  T extends BaseModel
+> extends BaseController<T> {
   constructor(
-    public model: GenericModel<T, M>,
-    public service: Service<M>,
+    public model: GenericModel<T>,
+    public service: Service<T>,
     route: string
   ) {
     super(model, service, route, `/${ROUTES.COOKBOOKS}/:${ROUTES.COOKBOOKS}`);

@@ -1,22 +1,15 @@
-import { Service } from "../services/BaseService";
 import autoBind from "../utils/autobind";
 
-export class BaseModel<T, M> {
-  constructor(public service: Service<M>) {
+export class BaseModel {
+  constructor() {
     autoBind(this);
   }
 
-  async save(): Promise<M> {
-    const saved = await this.service.save(this.serialize());
-
-    return saved;
+  sanitize(): any {
+    throw new Error("Overload BaseModel.sanitize");
   }
 
-  deserialize(): any {
-    throw new Error("Overload BaseModel.deserialize");
-  }
-
-  serialize(): any {
-    throw new Error("Overload BaseModel.serialize");
+  async sanitizeAsync(): Promise<any> {
+    throw new Error("Overload BaseModel.sanitizeAsync");
   }
 }

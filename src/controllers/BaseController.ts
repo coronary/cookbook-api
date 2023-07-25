@@ -15,16 +15,16 @@ export interface Controller {
   deleteOne: (req, res) => void;
 }
 
-export interface GenericModel<T extends BaseModel<T, M>, M> {
+export interface GenericModel<T extends BaseModel> {
   new (any): T;
 }
 
-export class BaseController<T extends BaseModel<T, M>, M> {
+export class BaseController<T extends BaseModel> {
   public router = Router({ mergeParams: true });
 
   constructor(
-    public model: GenericModel<T, M>,
-    public service: Service<M>,
+    public model: GenericModel<T>,
+    public service: Service<T>,
     public route: string,
     public parentRoute: string = ""
   ) {
@@ -46,8 +46,8 @@ export class BaseController<T extends BaseModel<T, M>, M> {
 
   @tryCatch()
   async getAll(req, res) {
-    const model = await this.service.get({ ...req.body });
-    res.send(model);
+    const models = await this.service.get({ ...req.body });
+    res.send(models.map((model) => model.sanitize()));
   }
 
   detailRoute(): string {
@@ -57,19 +57,16 @@ export class BaseController<T extends BaseModel<T, M>, M> {
   @tryCatch()
   async create(req, res) {
     const { body } = req;
-    const model = new this.model({
-      ...body,
-    });
-    res.send(await model.save());
+    const model = await this.service.save({ ...body });
+    res.send(model.sanitize());
   }
 
   @tryCatch()
   async update(req, res) {
     const { body, params } = req;
     const id = params[this.route];
-    const model = await this.service.getById(id);
-    const newModel = new this.model({ ...model, ...body });
-    res.send(await newModel.save());
+    const model = await this.service.save({ id, ...body });
+    res.send(model.sanitize());
   }
 
   @tryCatch()
@@ -82,7 +79,8 @@ export class BaseController<T extends BaseModel<T, M>, M> {
   @tryCatch()
   async getById(req, res) {
     const id = req.params[this.route];
+    const { populate } = req.query;
     const model = await this.service.getById(id);
-    res.send(model);
+    res.send(populate ? model.sanitize() : await model.sanitizeAsync());
   }
 }

@@ -25,9 +25,9 @@ export default new Strategy(
         discordId: profile.id,
         discordUsername: profile.username,
         discordAvatar: profile.avatar,
-        discordDiscriminator: profile.discriminator,
+        superAdmin: existingUser?.superAdmin ?? false,
       });
-      const savedUser = await u.save();
+      const savedUser = await userService.save(u);
 
       return next(null, savedUser);
     } catch (err) {

@@ -1,12 +1,9 @@
 import { ROUTES } from "../constants/Constants";
-import { Post, SerializedPost } from "../models/Post";
+import { Post } from "../models/Post";
 import PostService from "../services/PostService";
 import { CookbookBaseController } from "./CookbookBaseController";
 
-export class PostController extends CookbookBaseController<
-  Post,
-  SerializedPost
-> {
+export class PostController extends CookbookBaseController<Post> {
   constructor(postService: PostService) {
     super(Post, postService, ROUTES.POSTS);
   }

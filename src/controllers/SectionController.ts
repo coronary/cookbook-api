@@ -1,12 +1,9 @@
 import { ROUTES } from "../constants/Constants";
-import { Section, SerializedSection } from "../models/Section";
+import { Section } from "../models/Section";
 import SectionService from "../services/SectionService";
 import { CookbookBaseController } from "./CookbookBaseController";
 
-export class SectionController extends CookbookBaseController<
-  Section,
-  SerializedSection
-> {
+export class SectionController extends CookbookBaseController<Section> {
   constructor(sectionService: SectionService) {
     super(Section, sectionService, ROUTES.SECTIONS);
   }

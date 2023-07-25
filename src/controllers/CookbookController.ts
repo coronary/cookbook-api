@@ -2,7 +2,7 @@ import { AppInjector } from "../app";
 import { ROUTES } from "../constants/Constants";
 import { cookbookAuth } from "../middleware/Auth";
 import { superAuth } from "../middleware/SuperAuth";
-import { Cookbook, SerializedCookbook } from "../models/Cookbook";
+import { Cookbook } from "../models/Cookbook";
 import CookbookService from "../services/CookbookService";
 import { BaseController } from "./BaseController";
 import { GuideController } from "./GuideController";
@@ -10,10 +10,7 @@ import { PostController } from "./PostController";
 import { SectionController } from "./SectionController";
 import { TagController } from "./TagController";
 
-export class CookbookController extends BaseController<
-  Cookbook,
-  SerializedCookbook
-> {
+export class CookbookController extends BaseController<Cookbook> {
   constructor(cookBookService: CookbookService) {
     super(Cookbook, cookBookService, ROUTES.COOKBOOKS);
   }

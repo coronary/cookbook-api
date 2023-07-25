@@ -1,10 +1,9 @@
-import PostService from "../services/PostService";
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
-import { AppInjector } from "../app";
 
 export interface DeSerializedPost {
   _id?: ObjectId;
+  cookbook: ObjectId;
   user: ObjectId;
   body: string;
   tags: ObjectId[];
@@ -12,35 +11,43 @@ export interface DeSerializedPost {
 
 export interface SerializedPost {
   id?: ObjectId;
+  cookbook: ObjectId;
   user: ObjectId;
   body: string;
   tags: ObjectId[];
 }
 
-export class Post extends BaseModel<Post, SerializedPost> {
-  public _id: ObjectId | undefined;
+export interface SanitizedPost {
+  id?: ObjectId;
+  cookbook: ObjectId;
+  user: ObjectId;
+  body: string;
+  tags: ObjectId[];
+}
+
+export class Post extends BaseModel {
+  public id: ObjectId | undefined;
+  public cookbook: ObjectId;
   public user: ObjectId;
   public body: string;
   public tags: ObjectId[];
 
-  constructor({ id, user, body, tags }: SerializedPost) {
-    super(AppInjector.injectClass(PostService));
-    this._id = id;
+  constructor({ id, cookbook, user, body, tags }: SerializedPost) {
+    super();
+    this.id = id;
+    this.cookbook = cookbook;
     this.user = user;
     this.body = body;
     this.tags = tags;
   }
 
-  public deserialize(): DeSerializedPost {
-    return AppInjector.injectClass(PostService).deserialize(this);
-  }
-
-  public serialize(): SerializedPost {
-    return AppInjector.injectClass(PostService).serialize({
-      _id: this._id,
+  public sanitize(): SanitizedPost {
+    return {
+      id: this.id,
+      cookbook: this.cookbook,
       user: this.user,
       body: this.body,
       tags: this.tags,
-    });
+    };
   }
 }

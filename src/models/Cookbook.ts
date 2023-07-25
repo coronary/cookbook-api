@@ -1,10 +1,14 @@
-import CookbookService from "../services/CookbookService";
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
 import { AppInjector } from "../app";
+import GuideService from "../services/GuideService";
+import { SanitizedGuide } from "./Guide";
+
+const authRoles = ["admin", "chef"];
 
 export interface DeSerializedCookbook {
   _id?: ObjectId;
+  game: ObjectId;
   name: string;
   streams?: string[];
   roles?: any;
@@ -16,6 +20,7 @@ export interface DeSerializedCookbook {
 
 export interface SerializedCookbook {
   id?: ObjectId;
+  game: ObjectId;
   name: string;
   streams?: string[];
   roles?: any;
@@ -25,19 +30,33 @@ export interface SerializedCookbook {
   avatarUrl?: string;
 }
 
-export class Cookbook extends BaseModel<Cookbook, SerializedCookbook> {
+export interface SanitizedCookbook {
+  id: ObjectId;
+  game: ObjectId;
+  name: string;
+  streams?: string[];
+  roles?: any;
+  preview?: boolean;
+  guides?: SanitizedGuide[];
+  bannerUrl?: string;
+  avatarUrl?: string;
+}
+
+export class Cookbook extends BaseModel {
   public _id: ObjectId | undefined;
+  public game: ObjectId;
   public name: string;
   public streams: string[];
   public roles: string[];
   public preview;
   public guides: any[];
-  public banner_url: string | undefined;
-  public avatar_url: string | undefined;
+  public bannerUrl: string | undefined;
+  public avatarUrl: string | undefined;
 
   constructor({
     id,
     name,
+    game,
     streams,
     roles,
     preview,
@@ -45,31 +64,60 @@ export class Cookbook extends BaseModel<Cookbook, SerializedCookbook> {
     bannerUrl,
     avatarUrl,
   }: SerializedCookbook) {
-    super(AppInjector.injectClass(CookbookService));
+    super();
     this._id = id;
+    this.game = game;
     this.name = name;
     this.streams = streams;
     this.roles = roles;
     this.preview = preview;
     this.guides = guides;
-    this.banner_url = bannerUrl;
-    this.avatar_url = avatarUrl;
+    this.bannerUrl = bannerUrl;
+    this.avatarUrl = avatarUrl;
   }
 
-  public deserialize(): DeSerializedCookbook {
-    return AppInjector.injectClass(CookbookService).deserialize(this);
+  public authUser(userId: string) {
+    return this.roles != null && authRoles.includes(this.roles[userId]);
   }
 
-  public serialize(): SerializedCookbook {
-    return AppInjector.injectClass(CookbookService).serialize({
-      _id: this._id,
+  public async populatedGuides() {
+    const populatedGuides = [];
+
+    for (const guideId in this.guides) {
+      const guide = await AppInjector.injectClass(GuideService).getById(
+        guideId
+      );
+      populatedGuides.push(guide.sanitize());
+    }
+
+    return populatedGuides;
+  }
+
+  public sanitize(): SanitizedCookbook {
+    return {
+      id: this._id,
+      game: this.game,
       name: this.name,
       streams: this.streams,
       roles: this.roles,
       preview: this.preview,
       guides: this.guides,
-      banner_url: this.banner_url,
-      avatar_url: this.avatar_url,
-    });
+      bannerUrl: this.bannerUrl,
+      avatarUrl: this.avatarUrl,
+    };
+  }
+
+  public async sanitizeAsync(): Promise<SanitizedCookbook> {
+    return {
+      id: this._id,
+      game: this.game,
+      name: this.name,
+      streams: this.streams,
+      roles: this.roles,
+      preview: this.preview,
+      guides: await this.populatedGuides(),
+      bannerUrl: this.bannerUrl,
+      avatarUrl: this.avatarUrl,
+    };
   }
 }

@@ -3,7 +3,7 @@ import session from "express-session";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { CookbookController } from "../controllers/CookbookController";
-import { dbConnect } from "../db/db";
+import { dbConnect, dbConnectDepricated } from "../db/db";
 import passport from "passport";
 import DiscordStrategy from "../middleware/DiscordStrategy";
 import { ROUTES } from "../constants/Constants";
@@ -18,8 +18,19 @@ import GuideService from "../services/GuideService";
 import PostService from "../services/PostService";
 import SectionService from "../services/SectionService";
 import TagService from "../services/TagService";
+import { GameController } from "../controllers/GameController";
+import GameService from "../services/GameService";
+import {
+  syncCookbooks,
+  syncGames,
+  syncGuides,
+  syncPosts,
+  syncTags,
+  syncUsers,
+} from "../db/sync";
 
 export const AppInjector = createInjector()
+  .provideClass("gameService", GameService)
   .provideClass("cookbookService", CookbookService)
   .provideClass("userService", UserService)
   .provideClass("guideService", GuideService)
@@ -43,8 +54,15 @@ class App {
       done(null, user);
     });
 
-    passport.deserializeUser(function (user, done) {
-      done(null, user);
+    passport.deserializeUser(async function (user, done) {
+      try {
+        const userModel = await AppInjector.injectClass(
+          UserService
+        ).getByDiscordId(user.discordId);
+        done(null, userModel);
+      } catch (err) {
+        done(err);
+      }
     });
     passport.use(DiscordStrategy);
     this.app.use(bodyParser.json({ limit: bodySizeLimit }));
@@ -66,12 +84,21 @@ class App {
 
   private async setControllers() {
     await dbConnect();
+    await dbConnectDepricated();
+    // await syncGames();
+    // await syncUsers();
+    // await syncCookbooks();
+    // await syncTags();
+    // await syncPosts();
+    // await syncGuides();
 
     const loginController = new LoginController();
+    const gameController = AppInjector.injectClass(GameController);
     const cookbookController = AppInjector.injectClass(CookbookController);
     const userController = AppInjector.injectClass(UserController);
 
     this.app.use(`/${ROUTES.LOGIN}`, loginController.router);
+    this.app.use(`/${ROUTES.GAMES}`, gameController.router);
     this.app.use(`/${ROUTES.COOKBOOKS}`, cookbookController.router);
     this.app.use(`/${ROUTES.USERS}`, userController.router);
 

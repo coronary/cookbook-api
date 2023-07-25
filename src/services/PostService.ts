@@ -2,14 +2,16 @@ import { COLLECTIONS } from "../db/db";
 import { Post, DeSerializedPost, SerializedPost } from "../models/Post";
 import { BaseService } from "./BaseService";
 
-export default class PostService extends BaseService<Post, SerializedPost> {
+export default class PostService extends BaseService<Post> {
   constructor() {
     super(COLLECTIONS.GUIDES, Post);
   }
 
-  public deserialize(document): DeSerializedPost {
-    const { user, body, tags } = document;
+  public deserialize(model): DeSerializedPost {
+    const { id, cookbook, user, body, tags } = model;
     return {
+      _id: id,
+      cookbook,
       user: user,
       body,
       tags,
@@ -17,9 +19,10 @@ export default class PostService extends BaseService<Post, SerializedPost> {
   }
 
   public serialize(document): SerializedPost {
-    const { _id, user, body, tags } = document;
+    const { _id, cookbook, user, body, tags } = document;
     return {
       id: _id,
+      cookbook,
       user,
       body,
       tags,

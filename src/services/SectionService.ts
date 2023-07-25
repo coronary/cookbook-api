@@ -6,30 +6,26 @@ import {
 } from "../models/Section";
 import { BaseService } from "./BaseService";
 
-export default class SectionService extends BaseService<
-  Section,
-  SerializedSection
-> {
+export default class SectionService extends BaseService<Section> {
   constructor() {
     super(COLLECTIONS.GUIDES, Section);
   }
 
-  public deserialize(document): DeSerializedSection {
-    const { name, body, tags } = document;
+  public deserialize(model): DeSerializedSection {
+    const { id, name, body } = model;
     return {
+      _id: id,
       name: name,
       body,
-      tags,
     };
   }
 
   public serialize(document): SerializedSection {
-    const { _id, name, body, tags } = document;
+    const { _id, name, body } = document;
     return {
       id: _id,
       name,
       body,
-      tags,
     };
   }
 }

@@ -6,18 +6,26 @@ import {
 } from "../models/Cookbook";
 import { BaseService } from "./BaseService";
 
-export default class CookbookService extends BaseService<
-  Cookbook,
-  SerializedCookbook
-> {
+export default class CookbookService extends BaseService<Cookbook> {
   constructor() {
     super(COLLECTIONS.COOKBOOKS, Cookbook);
   }
 
-  public deserialize(document): DeSerializedCookbook {
-    const { name, streams, roles, preview, guides, bannerUrl, avatarUrl } =
-      document;
+  public deserialize(model): DeSerializedCookbook {
+    const {
+      id,
+      game,
+      name,
+      streams,
+      roles,
+      preview,
+      guides,
+      bannerUrl,
+      avatarUrl,
+    } = model;
     return {
+      _id: id,
+      game,
       name,
       streams,
       roles,
@@ -29,9 +37,11 @@ export default class CookbookService extends BaseService<
   }
 
   public serialize(document): SerializedCookbook {
-    const { _id, name, streams, roles, preview, guides, banner_url } = document;
+    const { _id, game, name, streams, roles, preview, guides, banner_url } =
+      document;
     return {
       id: _id,
+      game,
       name,
       streams,
       roles,

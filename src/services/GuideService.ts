@@ -2,14 +2,15 @@ import { COLLECTIONS } from "../db/db";
 import { Guide, DeSerializedGuide, SerializedGuide } from "../models/Guide";
 import { BaseService } from "./BaseService";
 
-export default class GuideService extends BaseService<Guide, SerializedGuide> {
+export default class GuideService extends BaseService<Guide> {
   constructor() {
     super(COLLECTIONS.GUIDES, Guide);
   }
 
-  public deserialize(document): DeSerializedGuide {
-    const { name, cookbook, sections } = document;
+  public deserialize(model): DeSerializedGuide {
+    const { id, name, cookbook, sections } = model;
     return {
+      _id: id,
       name: name,
       cookbook,
       sections,
