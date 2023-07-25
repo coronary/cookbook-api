@@ -4,7 +4,7 @@ import { BaseService } from "./BaseService";
 
 export default class PostService extends BaseService<Post> {
   constructor() {
-    super(COLLECTIONS.GUIDES, Post);
+    super(COLLECTIONS.POSTS, Post);
   }
 
   public deserialize(model): DeSerializedPost {

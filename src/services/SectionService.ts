@@ -8,7 +8,7 @@ import { BaseService } from "./BaseService";
 
 export default class SectionService extends BaseService<Section> {
   constructor() {
-    super(COLLECTIONS.GUIDES, Section);
+    super(COLLECTIONS.SECTIONS, Section);
   }
 
   public deserialize(model): DeSerializedSection {

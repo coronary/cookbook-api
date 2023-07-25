@@ -5,7 +5,7 @@ import * as https from "https";
 import AWS from "aws-sdk";
 import { logger } from "../utils/Logging";
 
-const gfyRegex = /(https:\/\/)(thumbs\.)?(gfycat)[^\s,]*/g;
+const gfyRegex = /(https:\/\/)(thumbs\.)?(giant\.)?(gfycat)[a-zA-Z\.\/0-9-]*/g;
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.BUCKET_ACCESS_KEY,

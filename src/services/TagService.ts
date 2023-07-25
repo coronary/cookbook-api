@@ -4,7 +4,7 @@ import { BaseService } from "./BaseService";
 
 export default class TagService extends BaseService<Tag> {
   constructor() {
-    super(COLLECTIONS.GUIDES, Tag);
+    super(COLLECTIONS.TAGS, Tag);
   }
 
   public deserialize(model): DeSerializedTag {
