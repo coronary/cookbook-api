@@ -12,20 +12,22 @@ export default class SectionService extends BaseService<Section> {
   }
 
   public deserialize(model): DeSerializedSection {
-    const { id, cookbook, name, body } = model;
+    const { id, cookbook, guide, name, body } = model;
     return {
       _id: id,
       cookbook,
+      guide,
       name: name,
       body,
     };
   }
 
   public serialize(document): SerializedSection {
-    const { _id, cookbook, name, body } = document;
+    const { _id, cookbook, guide, name, body } = document;
     return {
       id: _id,
       cookbook,
+      guide,
       name,
       body,
     };

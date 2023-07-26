@@ -18,13 +18,11 @@ export class CookbookController extends BaseController<Cookbook> {
 
   setChildRoutes() {
     const guideController = AppInjector.injectClass(GuideController);
-    const sectionController = AppInjector.injectClass(SectionController);
     const tagController = AppInjector.injectClass(TagController);
     const postController = AppInjector.injectClass(PostController);
     const fileController = AppInjector.injectClass(FileController);
 
     this.router.use(this.buildRoute(ROUTES.GUIDES), guideController.router);
-    this.router.use(this.buildRoute(ROUTES.SECTIONS), sectionController.router);
     this.router.use(this.buildRoute(ROUTES.TAGS), tagController.router);
     this.router.use(this.buildRoute(ROUTES.POSTS), postController.router);
     this.router.use(this.buildRoute(ROUTES.FILES), fileController.router);

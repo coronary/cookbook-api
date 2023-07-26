@@ -4,6 +4,7 @@ import { BaseModel } from "./BaseModel";
 export interface DeSerializedSection {
   _id?: ObjectId;
   cookbook: ObjectId;
+  guide: ObjectId;
   name: string;
   body: string;
 }
@@ -11,6 +12,7 @@ export interface DeSerializedSection {
 export interface SerializedSection {
   id?: ObjectId;
   cookbook: ObjectId;
+  guide: ObjectId;
   name: string;
   body: string;
 }
@@ -18,6 +20,7 @@ export interface SerializedSection {
 export interface SanitizedSection {
   id: ObjectId;
   cookbook: ObjectId;
+  guide: ObjectId;
   name: string;
   body: string;
 }
@@ -25,13 +28,15 @@ export interface SanitizedSection {
 export class Section extends BaseModel {
   public id: ObjectId | undefined;
   public cookbook: ObjectId;
+  public guide: ObjectId;
   public name: string;
   public body: string;
 
-  constructor({ id, cookbook, name, body }: SerializedSection) {
+  constructor({ id, cookbook, guide, name, body }: SerializedSection) {
     super();
     this.id = id;
     this.cookbook = cookbook;
+    this.guide = guide;
     this.name = name;
     this.body = body;
   }
@@ -40,6 +45,7 @@ export class Section extends BaseModel {
     return {
       id: this.id,
       cookbook: this.cookbook,
+      guide: this.guide,
       name: this.name,
       body: this.body,
     };

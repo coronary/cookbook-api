@@ -106,6 +106,7 @@ export async function syncGuides() {
         name: toTitle(section.title),
         body: await replaceGfy(guide.cookbook, section.body),
         cookbook: guide.cookbook,
+        guide: guide._id,
       };
 
       const document = await save(COLLECTIONS.SECTIONS, sectionModel);
