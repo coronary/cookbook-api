@@ -45,7 +45,7 @@ export class BaseController<T extends BaseModel> {
   setChildRoutes() {}
 
   @tryCatch()
-  async getAll(req, res) {
+  async getAll(req, res, next) {
     const models = await this.service.get({ ...req.body });
     res.send(models.map((model) => model.sanitize()));
   }
@@ -55,14 +55,14 @@ export class BaseController<T extends BaseModel> {
   }
 
   @tryCatch()
-  async create(req, res) {
+  async create(req, res, next) {
     const { body } = req;
     const model = await this.service.save({ ...body });
     res.send(model.sanitize());
   }
 
   @tryCatch()
-  async update(req, res) {
+  async update(req, res, next) {
     const { body, params } = req;
     const id = params[this.route];
     const model = await this.service.save({ id, ...body });
@@ -70,14 +70,14 @@ export class BaseController<T extends BaseModel> {
   }
 
   @tryCatch()
-  async deleteOne(req, res) {
+  async deleteOne(req, res, next) {
     const id = req.params[this.route];
     await this.service.deleteOne(id);
     res.send();
   }
 
   @tryCatch()
-  async getById(req, res) {
+  async getById(req, res, next) {
     const id = req.params[this.route];
     const { populate } = req.query;
     const model = await this.service.getById(id);

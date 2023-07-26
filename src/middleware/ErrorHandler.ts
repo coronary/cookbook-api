@@ -10,10 +10,10 @@ export function tryCatch(): any {
   return (target, key, descriptor) => {
     const fn = descriptor.value;
     descriptor.value = async function (...args) {
+      const [, , next] = args;
       try {
         await fn.apply(this, args);
       } catch (error) {
-        const [, , next] = args;
         next(error);
       }
     };

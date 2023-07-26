@@ -10,18 +10,18 @@ export class GameController extends BaseController<Game> {
   }
 
   @superAuth()
-  async create(req, res) {
-    super.create(req, res);
+  async create(req, res, next) {
+    super.create(req, res, next);
   }
 
   @superAuth()
-  async deleteOne(req, res) {
-    super.deleteOne(req, res);
+  async deleteOne(req, res, next) {
+    super.deleteOne(req, res, next);
   }
 
   @superAuth()
-  async update(req, res) {
-    super.update(req, res);
+  async update(req, res, next) {
+    super.update(req, res, next);
   }
 
   public static inject = ["gameService"] as const;

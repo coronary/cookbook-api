@@ -17,23 +17,23 @@ export class CookbookBaseController<
   }
 
   @cookbookId()
-  async getAll(req, res) {
-    super.getAll(req, res);
+  async getAll(req, res, next) {
+    super.getAll(req, res, next);
   }
 
   @cookbookId()
   @cookbookAuth()
-  async create(req, res) {
-    super.create(req, res);
+  async create(req, res, next) {
+    super.create(req, res, next);
   }
 
   @cookbookAuth()
-  async deleteOne(req, res) {
-    super.deleteOne(req, res);
+  async deleteOne(req, res, next) {
+    super.deleteOne(req, res, next);
   }
 
   @cookbookAuth()
-  async update(req, res) {
-    super.update(req, res);
+  async update(req, res, next) {
+    super.update(req, res, next);
   }
 }
