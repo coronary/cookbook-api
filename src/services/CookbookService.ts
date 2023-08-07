@@ -37,8 +37,17 @@ export default class CookbookService extends BaseService<Cookbook> {
   }
 
   public serialize(document): SerializedCookbook {
-    const { _id, game, name, streams, roles, preview, guides, banner_url } =
-      document;
+    const {
+      _id,
+      game,
+      name,
+      streams,
+      roles,
+      preview,
+      guides,
+      banner_url,
+      avatar_url,
+    } = document;
     return {
       id: _id,
       game,
@@ -48,6 +57,7 @@ export default class CookbookService extends BaseService<Cookbook> {
       preview,
       guides,
       bannerUrl: banner_url,
+      avatarUrl: avatar_url,
     };
   }
 }
