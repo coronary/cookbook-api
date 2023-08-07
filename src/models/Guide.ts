@@ -41,9 +41,9 @@ export class Guide extends BaseModel {
   public async populatedSections() {
     const populatedSections = [];
 
-    for (const sectionId in this.sections) {
+    for (const sectionId of this.sections) {
       const section = await AppInjector.injectClass(SectionService).getById(
-        sectionId
+        sectionId.toString()
       );
       populatedSections.push(section.sanitize());
     }

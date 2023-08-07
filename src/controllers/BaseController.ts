@@ -46,8 +46,15 @@ export class BaseController<T extends BaseModel> {
 
   @tryCatch()
   async getAll(req, res, next) {
+    const { populate } = req.query;
     const models = await this.service.get({ ...req.body });
-    res.send(models.map((model) => model.sanitize()));
+    const sanitizedModels = [];
+    for (const model of models) {
+      sanitizedModels.push(
+        populate === "true" ? await model.sanitizeAsync() : model.sanitize()
+      );
+    }
+    res.send(sanitizedModels);
   }
 
   detailRoute(): string {
