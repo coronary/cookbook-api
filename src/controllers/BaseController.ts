@@ -82,7 +82,7 @@ export class BaseController<T extends BaseModel> {
     const { populate } = req.query;
     const model = await this.service.getById(id);
     res.send(
-      populate === "true" ? model.sanitizeAsync() : await model.sanitize()
+      populate === "true" ? await model.sanitizeAsync() : model.sanitize()
     );
   }
 }
