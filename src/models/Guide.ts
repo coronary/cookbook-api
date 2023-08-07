@@ -1,5 +1,7 @@
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
+import SectionService from "../services/SectionService";
+import { AppInjector } from "../app";
 
 export interface DeSerializedGuide {
   _id?: ObjectId;
@@ -34,6 +36,28 @@ export class Guide extends BaseModel {
     this.name = name;
     this.cookbook = cookbook;
     this.sections = sections;
+  }
+
+  public async populatedSections() {
+    const populatedSections = [];
+
+    for (const sectionId in this.sections) {
+      const section = await AppInjector.injectClass(SectionService).getById(
+        sectionId
+      );
+      populatedSections.push(section.sanitize());
+    }
+
+    return populatedSections;
+  }
+
+  public async sanitizeAsync(): Promise<SanitizedGuide> {
+    return {
+      id: this.id,
+      name: this.name,
+      cookbook: this.cookbook,
+      sections: await this.populatedSections(),
+    };
   }
 
   public sanitize(): SanitizedGuide {
