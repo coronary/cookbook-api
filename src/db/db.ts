@@ -105,3 +105,65 @@ export async function deleteOne(
 ): Promise<void> {
   await collection.deleteOne({ _id: new ObjectId(id) });
 }
+
+export async function getAndPopulateCookbooks(cookbookName: string) {
+  return await COLLECTIONS.COOKBOOKS.aggregate([
+    {
+      $match: {
+        $expr: {
+          $eq: ["$name", cookbookName],
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "guides",
+        localField: "guides",
+        foreignField: "_id",
+        as: "guides",
+      },
+    },
+    {
+      $unwind: {
+        path: "$guides",
+      },
+    },
+    {
+      $lookup: {
+        from: "sections",
+        localField: "guides.sections",
+        foreignField: "_id",
+        as: "guides.sections",
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        name: {
+          $first: "$name",
+        },
+        avatar_url: {
+          $first: "$avatar_url",
+        },
+        banner_url: {
+          $first: "$banner_url",
+        },
+        game: {
+          $first: "$game",
+        },
+        preview: {
+          $first: "$preview",
+        },
+        roles: {
+          $first: "$roles",
+        },
+        streams: {
+          $first: "$streams",
+        },
+        guides: {
+          $push: "$guides",
+        },
+      },
+    },
+  ]).toArray();
+}

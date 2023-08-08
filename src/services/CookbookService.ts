@@ -1,4 +1,4 @@
-import { COLLECTIONS } from "../db/db";
+import { COLLECTIONS, getAndPopulateCookbooks } from "../db/db";
 import {
   Cookbook,
   DeSerializedCookbook,
@@ -9,6 +9,18 @@ import { BaseService } from "./BaseService";
 export default class CookbookService extends BaseService<Cookbook> {
   constructor() {
     super(COLLECTIONS.COOKBOOKS, Cookbook);
+  }
+
+  async getPopulatedCookbook(cookbookName: string): Promise<Cookbook> {
+    const documents = await getAndPopulateCookbooks(cookbookName);
+
+    if (documents == null) {
+      throw new Error("Documents Not Found");
+    }
+
+    const document = documents[0];
+
+    return new Cookbook({ ...this.serialize(document) });
   }
 
   public deserialize(model): DeSerializedCookbook {
