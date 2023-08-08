@@ -30,7 +30,22 @@ export class ItemFromNameController {
     );
   }
 
-  getCookbook(req, res, next) {}
+  getCookbook = async (req, res, next) => {
+    const { cookbookName } = req.params;
+    const { filters } = req.query ?? { filters: {} };
+
+    if (cookbookName == null) {
+      return next(createError(404, "Invalid query params"));
+    }
+
+    const cookbook = await this.getCookbookFromName(cookbookName, filters);
+
+    if (cookbook == null) {
+      return next(createError(404, "Cookbook Not Found"));
+    }
+
+    res.send(await cookbook.sanitizeAsync());
+  };
 
   getGuide = async (req, res, next) => {
     const { cookbookName, guideName } = req.params;
@@ -86,10 +101,11 @@ export class ItemFromNameController {
     res.send(section.sanitize());
   };
 
-  async getCookbookFromName(name: string) {
+  async getCookbookFromName(name: string, filters = {}) {
     const cookbooks =
       (await AppInjector.injectClass(CookbookService).get({
         name,
+        ...filters,
       })) ?? [];
     return cookbooks[0];
   }
