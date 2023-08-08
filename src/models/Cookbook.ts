@@ -43,7 +43,7 @@ export interface SanitizedCookbook {
 }
 
 export class Cookbook extends BaseModel {
-  public _id: ObjectId | undefined;
+  public id: ObjectId | undefined;
   public game: ObjectId;
   public name: string;
   public streams: string[];
@@ -65,7 +65,7 @@ export class Cookbook extends BaseModel {
     avatarUrl,
   }: SerializedCookbook) {
     super();
-    this._id = id;
+    this.id = id;
     this.game = game;
     this.name = name;
     this.streams = streams;
@@ -83,11 +83,11 @@ export class Cookbook extends BaseModel {
   public async populatedGuides() {
     const populatedGuides = [];
 
-    for (const guideId in this.guides) {
+    for (const guideId of this.guides) {
       const guide = await AppInjector.injectClass(GuideService).getById(
-        guideId
+        guideId.toString()
       );
-      populatedGuides.push(guide.sanitize());
+      populatedGuides.push(await guide.sanitizeAsync());
     }
 
     return populatedGuides;
@@ -95,7 +95,7 @@ export class Cookbook extends BaseModel {
 
   public sanitize(): SanitizedCookbook {
     return {
-      id: this._id,
+      id: this.id,
       game: this.game,
       name: this.name,
       streams: this.streams,
@@ -109,7 +109,7 @@ export class Cookbook extends BaseModel {
 
   public async sanitizeAsync(): Promise<SanitizedCookbook> {
     return {
-      id: this._id,
+      id: this.id,
       game: this.game,
       name: this.name,
       streams: this.streams,

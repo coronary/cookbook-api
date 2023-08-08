@@ -6,7 +6,6 @@ export const superAuth = (): any => {
     descriptor.value = async function (...args: any[]) {
       const [req, res, next] = args;
       const user = req.user;
-      console.log("🚀 ~ file: SuperAuth.ts:9 ~ user:", user);
 
       if (user == null || !user.superAdmin) {
         return next(createError(401, "Unauthorized"));

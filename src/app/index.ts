@@ -21,6 +21,8 @@ import TagService from "../services/TagService";
 import { GameController } from "../controllers/GameController";
 import GameService from "../services/GameService";
 import FileService from "../services/FileService";
+import { parseQueryStrings } from "../middleware/QueryStrings";
+import { ItemFromNameController } from "../controllers/ItemFromNameController";
 
 export const AppInjector = createInjector()
   .provideClass("gameService", GameService)
@@ -74,6 +76,7 @@ class App {
     );
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+    this.app.use(parseQueryStrings);
   }
 
   private async setControllers() {
@@ -90,11 +93,13 @@ class App {
     const gameController = AppInjector.injectClass(GameController);
     const cookbookController = AppInjector.injectClass(CookbookController);
     const userController = AppInjector.injectClass(UserController);
+    const itemFromNameController = new ItemFromNameController();
 
     this.app.use(`/${ROUTES.LOGIN}`, loginController.router);
     this.app.use(`/${ROUTES.GAMES}`, gameController.router);
     this.app.use(`/${ROUTES.COOKBOOKS}`, cookbookController.router);
     this.app.use(`/${ROUTES.USERS}`, userController.router);
+    this.app.use(`/${ROUTES.COOKBOOK_NAME}`, itemFromNameController.router);
 
     this.app.use(handleError);
   }

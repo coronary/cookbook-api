@@ -8,6 +8,9 @@ export const ROUTES = {
   POSTS: "posts",
   LOGIN: "login",
   FILES: "media",
+  COOKBOOK_NAME: "cookbookName",
+  GUIDE_NAME: "guideName",
+  SECTION_NAME: "sectionName",
 };
 
 export const MediaRoutes = {
