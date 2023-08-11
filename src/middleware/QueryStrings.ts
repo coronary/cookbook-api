@@ -3,11 +3,8 @@ import qs from "qs";
 
 export const parseQueryStrings = (req, res, next) => {
   const query = req.query ?? {};
-
-  if (query != null && query.filters != null) {
-    query.filters = parseObjectIds(qs.parse(query.filters));
-  }
-
+  query.filters = query.filters ?? {};
+  query.filters = parseObjectIds(qs.parse(query.filters));
   req.query = query;
   next();
 };

@@ -11,7 +11,7 @@ export const guideId = (): any => {
       if (guideId == null) {
         return next(createError(404, "Guide not found"));
       }
-
+      req.query.filters.guide = new ObjectId(guideId);
       req.body.guide = new ObjectId(guideId);
       return fn.apply(this, args);
     };

@@ -8,11 +8,12 @@ export const cookbookId = (): any => {
       try {
         const [req, res, next] = args;
         const cookbookId = req.params.cookbooks;
+        const query = req.params ?? { filters: {} };
 
         if (cookbookId == null) {
           return next(createError(404, "Cookbook not found"));
         }
-
+        req.query.filters.cookbook = new ObjectId(cookbookId);
         req.body.cookbook = new ObjectId(cookbookId);
         return fn.apply(this, args);
       } catch (err) {
