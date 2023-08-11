@@ -1,4 +1,5 @@
-import { COLLECTIONS, getAndPopulateCookbooks } from "../db/db";
+import { getAndPopulateCookbooks } from "../db/aggregates/cookbook";
+import { COLLECTIONS } from "../db/db";
 import {
   Cookbook,
   DeSerializedCookbook,
