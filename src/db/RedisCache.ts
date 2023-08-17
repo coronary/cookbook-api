@@ -1,10 +1,12 @@
 import * as redis from "redis";
 
+const REDIS_URL = process.env.REDIS_URL;
+
 class RedisCache {
   public client;
 
   constructor() {
-    this.client = redis.createClient();
+    this.client = redis.createClient({ url: REDIS_URL });
     this.client.on("error", (error) => console.error(`Error : ${error}`));
   }
 
