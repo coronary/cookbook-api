@@ -35,6 +35,16 @@ export interface DeSerializedUser {
   super_admin?: boolean;
 }
 
+export function isUser(object: any): object is User {
+  const { id, discordId, discordUsername } = object;
+  if (
+    id !== undefined &&
+    discordId !== undefined &&
+    discordUsername !== undefined
+  )
+    return true;
+}
+
 export class User extends BaseModel {
   public id: ObjectId | undefined;
   public discordId: string;

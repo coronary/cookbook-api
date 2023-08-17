@@ -81,9 +81,10 @@ export async function getById(
 
 export async function get(
   collection: Collection,
-  filter = {}
+  filter = {},
+  options = {}
 ): Promise<Array<Document>> {
-  return collection.find(filter).toArray();
+  return collection.find(filter, options).toArray();
 }
 
 export async function save(

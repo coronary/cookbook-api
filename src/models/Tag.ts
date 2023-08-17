@@ -22,6 +22,12 @@ export interface SanitizedTag {
   color?: string;
 }
 
+export function isTag(object: any): object is Tag {
+  const { id, name, cookbook } = object;
+  if (id !== undefined && name !== undefined && cookbook !== undefined)
+    return true;
+}
+
 export class Tag extends BaseModel {
   public id: ObjectId | undefined;
   public name: string;
@@ -36,7 +42,7 @@ export class Tag extends BaseModel {
     this.color = color;
   }
 
-  public serialize(): SanitizedTag {
+  public sanitize(): SanitizedTag {
     return {
       id: this.id,
       name: this.name,

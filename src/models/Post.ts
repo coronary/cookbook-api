@@ -1,5 +1,7 @@
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
+import { SanitizedUser, User, isUser } from "./User";
+import { SanitizedTag, SerializedTag, Tag, isTag } from "./Tag";
 
 export interface DeSerializedPost {
   _id?: ObjectId;
@@ -20,17 +22,17 @@ export interface SerializedPost {
 export interface SanitizedPost {
   id?: ObjectId;
   cookbook: ObjectId;
-  user: ObjectId;
+  user: ObjectId | SanitizedUser;
   body: string;
-  tags: ObjectId[];
+  tags: Array<ObjectId | SanitizedTag>;
 }
 
 export class Post extends BaseModel {
   public id: ObjectId | undefined;
   public cookbook: ObjectId;
-  public user: ObjectId;
+  public user: ObjectId | User;
   public body: string;
-  public tags: ObjectId[];
+  public tags: Array<ObjectId | Tag>;
 
   constructor({ id, cookbook, user, body, tags }: SerializedPost) {
     super();
@@ -45,9 +47,9 @@ export class Post extends BaseModel {
     return {
       id: this.id,
       cookbook: this.cookbook,
-      user: this.user,
+      user: isUser(this.user) ? this.user?.sanitize() : this.user,
       body: this.body,
-      tags: this.tags,
+      tags: this.tags.map((tag) => (isTag(tag) ? tag?.sanitize() : tag)),
     };
   }
 }

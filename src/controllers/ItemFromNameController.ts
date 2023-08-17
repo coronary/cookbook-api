@@ -7,6 +7,7 @@ import GuideService from "../services/GuideService";
 import CookbookService from "../services/CookbookService";
 import { ObjectId } from "mongodb";
 import SectionService from "../services/SectionService";
+import RedisCache from "../db/RedisCache";
 
 export class ItemFromNameController {
   public router = Router();
@@ -37,6 +38,13 @@ export class ItemFromNameController {
       return next(createError(404, "Invalid query params"));
     }
 
+    const cachedCookbook = await RedisCache.get(`cookbooks:${cookbookName}`);
+
+    if (cachedCookbook != null) {
+      res.send(cachedCookbook);
+      return;
+    }
+
     const cookbook = await AppInjector.injectClass(
       CookbookService
     ).getPopulatedCookbook(cookbookName);
@@ -44,6 +52,11 @@ export class ItemFromNameController {
     if (cookbook == null) {
       return next(createError(404, "Cookbook Not Found"));
     }
+
+    await RedisCache.set(
+      `cookbooks:${cookbookName}`,
+      JSON.stringify(cookbook.sanitize())
+    );
 
     res.send(cookbook.sanitize());
   };
@@ -77,6 +90,15 @@ export class ItemFromNameController {
       return next(createError(404, "Invalid query params"));
     }
 
+    const cachedSection = await RedisCache.get(
+      `cookbooks:${cookbookName}:guides:${guideName}:sections:${sectionName}`
+    );
+
+    if (cachedSection != null) {
+      res.send(cachedSection);
+      return;
+    }
+
     const cookbook = await this.getCookbookFromName(cookbookName);
 
     if (cookbook == null) {
@@ -98,6 +120,11 @@ export class ItemFromNameController {
     if (section == null) {
       return next(createError(404, "Section Not Found"));
     }
+
+    await RedisCache.set(
+      `cookbooks:${cookbookName}:guides:${guideName}:sections:${sectionName}`,
+      JSON.stringify(section.sanitize())
+    );
 
     res.send(section.sanitize());
   };
