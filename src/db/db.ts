@@ -92,7 +92,7 @@ export async function save(
   model: any
 ): Promise<Document> {
   const { _id, ...body } = model;
-  const filter = { _id: new ObjectId(_id) };
+  const filter = { _id: _id instanceof ObjectId ? _id : new ObjectId(_id) };
   const update = { $set: { ...body } };
   const options = { upsert: true, returnDocument: ReturnDocument.AFTER };
 
