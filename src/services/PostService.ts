@@ -18,11 +18,11 @@ export default class PostService extends BaseService<Post> {
     super(COLLECTIONS.POSTS, Post);
   }
 
-  public async get(filter?): Promise<Array<Post>> {
+  public async get(filter?, options?): Promise<Array<Post>> {
     const documents = await getAndPopulate(
       this.collection,
       filter,
-      { limit: 10 },
+      options,
       POPULATE_FIELDS
     );
 

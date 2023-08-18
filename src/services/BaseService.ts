@@ -6,7 +6,7 @@ import autoBind from "../utils/autobind";
 
 export interface Service<T> {
   getById: (id: string) => Promise<T>;
-  get: (any?) => Promise<Array<T>>;
+  get: (filter?, options?) => Promise<Array<T>>;
   save: (any) => Promise<T>;
   deleteOne: (id: string) => Promise<void>;
 }
@@ -24,8 +24,8 @@ export class BaseService<T extends BaseModel> implements Service<T> {
     return new this.type({ ...this.serialize(document) });
   }
 
-  public async get(filter?): Promise<Array<T>> {
-    const documents = await get(this.collection, filter);
+  public async get(filter?, options?): Promise<Array<T>> {
+    const documents = await get(this.collection, filter, options);
 
     if (documents == null) {
       throw new Error("Documents Not Found");

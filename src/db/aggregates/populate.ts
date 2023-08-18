@@ -5,9 +5,16 @@ export async function getAndPopulate(
   fields = []
 ) {
   const populations = [];
+  let pipeline = [];
+
+  pipeline.push({
+    $match: filters,
+  });
+  pipeline.push({ $sort: { _id: -1 } });
 
   for (const field of fields) {
     const { field: name, collection, unwind } = field;
+
     populations.push({
       $lookup: {
         from: collection,
@@ -21,18 +28,13 @@ export async function getAndPopulate(
       populations.push({ $unwind: { path: `$${name}` } });
     }
   }
-  let pipeline = [];
-
-  pipeline.push({
-    $match: filters,
-  });
 
   if (options.skip != null) {
-    pipeline.push({ $skip: options.skip });
+    pipeline.push({ $skip: parseInt(options.skip) });
   }
 
   if (options.limit != null) {
-    pipeline.push({ $limit: options.limit });
+    pipeline.push({ $limit: parseInt(options.limit) });
   }
 
   pipeline = pipeline.concat(populations);

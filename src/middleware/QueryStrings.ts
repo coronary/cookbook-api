@@ -4,6 +4,7 @@ import qs from "qs";
 export const parseQueryStrings = (req, res, next) => {
   const query = req.query ?? {};
   query.filters = query.filters ?? {};
+  query.options = query.options ?? {};
   query.filters = parseObjectIds(qs.parse(query.filters));
   req.query = query;
   next();
