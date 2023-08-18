@@ -91,11 +91,13 @@ class App {
     // await syncPosts();
     // await syncGuides();
 
-    const loginController = new LoginController();
+    const loginController = AppInjector.injectClass(LoginController);
     const gameController = AppInjector.injectClass(GameController);
     const cookbookController = AppInjector.injectClass(CookbookController);
     const userController = AppInjector.injectClass(UserController);
-    const itemFromNameController = new ItemFromNameController();
+    const itemFromNameController = AppInjector.injectClass(
+      ItemFromNameController
+    );
 
     this.app.use(`/${ROUTES.LOGIN}`, loginController.router);
     this.app.use(`/${ROUTES.GAMES}`, gameController.router);

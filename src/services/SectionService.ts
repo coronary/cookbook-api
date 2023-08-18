@@ -1,3 +1,4 @@
+import { getSectionFromNames } from "../db/aggregates/section";
 import { COLLECTIONS } from "../db/db";
 import {
   Section,
@@ -9,6 +10,24 @@ import { BaseService } from "./BaseService";
 export default class SectionService extends BaseService<Section> {
   constructor() {
     super(COLLECTIONS.SECTIONS, Section);
+  }
+
+  async getSectionFromNames(
+    cookbookName: string,
+    guideName: string,
+    sectionName: string
+  ): Promise<Section> {
+    const document = await getSectionFromNames(
+      cookbookName,
+      guideName,
+      sectionName
+    );
+
+    if (document == null) {
+      throw new Error("Documents Not Found");
+    }
+
+    return new Section({ ...this.serialize(document) });
   }
 
   public deserialize(model): DeSerializedSection {

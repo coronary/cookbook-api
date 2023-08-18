@@ -1,6 +1,14 @@
 import * as redis from "redis";
+import { BaseModel } from "../models/BaseModel";
+import { logger } from "../utils/Logging";
 
 const REDIS_URL = process.env.REDIS_URL;
+
+export const Caches = {
+  COOKBOOK: (cookbookName) => `cookbooks:${cookbookName}`,
+  SECTION: (cookbookName, guideName, sectionName) =>
+    `cookbooks:${cookbookName}:guides:${guideName}:sections:${sectionName}`,
+};
 
 class RedisCache {
   public client;
@@ -14,12 +22,19 @@ class RedisCache {
     await this.client.connect();
   }
 
-  async set(key, value) {
-    await this.client.set(key, value);
+  async set(key, value: BaseModel) {
+    try {
+      await this.client.set(key, JSON.stringify(value.sanitize()));
+    } catch (err) {
+      logger.error("Error redis.set: ", err);
+    }
   }
-
   async get(key) {
-    return await this.client.get(key);
+    try {
+      return await this.client.get(key);
+    } catch (err) {
+      logger.error("Error redis.get: ", err);
+    }
   }
 }
 
