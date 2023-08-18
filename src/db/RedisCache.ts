@@ -14,12 +14,19 @@ class RedisCache {
   public client;
 
   constructor() {
-    this.client = redis.createClient({ url: REDIS_URL });
+    this.client =
+      REDIS_URL != null
+        ? redis.createClient({ url: REDIS_URL })
+        : redis.createClient();
     this.client.on("error", (error) => console.error(`Error : ${error}`));
   }
 
   async connect() {
     await this.client.connect();
+  }
+
+  async flushAll() {
+    await this.client.flushAll();
   }
 
   async set(key, value: BaseModel) {
