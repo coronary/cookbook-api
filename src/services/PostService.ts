@@ -13,17 +13,35 @@ const POPULATE_FIELDS = [
   { field: "tags", collection: "tags" },
 ];
 
+const SEARCH_FIELDS = ["body", "tags.name"];
+
+function parseTags(s: string) {
+  if (s == null) return { search: undefined, tags: undefined };
+  const tags = [...s.matchAll(/#[^\s]+/g)].map((tag) =>
+    tag[0].replace("#", "")
+  );
+  const search = s.replaceAll(/#[^\s]+/g, "").trim();
+  return { search, tags };
+}
+
 export default class PostService extends BaseService<Post> {
   constructor() {
     super(COLLECTIONS.POSTS, Post);
   }
 
-  public async get(filter?, options?): Promise<Array<Post>> {
+  public async get(filter?, options?, search?): Promise<Array<Post>> {
+    const { search: searchString, tags } = parseTags(search);
+
     const documents = await getAndPopulate(
       this.collection,
       filter,
       options,
-      POPULATE_FIELDS
+      searchString,
+      {
+        populateFields: POPULATE_FIELDS,
+        searchFields: SEARCH_FIELDS,
+        tags,
+      }
     );
 
     if (documents == null) {

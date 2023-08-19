@@ -46,8 +46,8 @@ export class BaseController<T extends BaseModel> {
 
   @tryCatch()
   async getAll(req, res, next) {
-    const { populate, filters, options } = req.query;
-    const models = await this.service.get(filters, options);
+    const { populate, filters, options, search } = req.query;
+    const models = await this.service.get(filters, options, search);
     const sanitizedModels = [];
     for (const model of models) {
       sanitizedModels.push(
