@@ -20,7 +20,7 @@ function parseTags(s: string) {
   const tags = [...s.matchAll(/#[^\s]+/g)].map((tag) =>
     tag[0].replace("#", "")
   );
-  const search = s.replaceAll(/#[^\s]+/g, "").trim();
+  const search = s.replace(/#[^\s]+/g, "").trim();
   return { search, tags };
 }
 
