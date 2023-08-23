@@ -10,7 +10,11 @@ import {
 const DATABASE_URL = process.env.DATABASE_URL;
 const DEPRICATED_DATABASE_URL = process.env.DEPRICATED_DATABASE_URL;
 
-export const COLLECTIONS: { [collection: string]: Collection } = {
+export interface CollectionType {
+  [collection: string]: Collection;
+}
+
+export const COLLECTIONS: CollectionType = {
   GAMES: undefined,
   COOKBOOKS: undefined,
   USERS: undefined,
@@ -21,7 +25,7 @@ export const COLLECTIONS: { [collection: string]: Collection } = {
   FILES: undefined,
 };
 
-export const DEPRICATED_COLLECTIONS: { [collection: string]: Collection } = {
+export const DEPRICATED_COLLECTIONS: CollectionType = {
   GAMES: undefined,
   COOKBOOKS: undefined,
   USERS: undefined,

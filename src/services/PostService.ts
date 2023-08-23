@@ -1,5 +1,6 @@
 import { AppInjector } from "../app";
-import { getAndPopulate } from "../db/aggregates/populate";
+import { Population } from "../db/aggregates/AggregationBuilder";
+import { AggregationDirector } from "../db/aggregates/AggregationDirector";
 import { COLLECTIONS } from "../db/db";
 import { Post, DeSerializedPost, SerializedPost } from "../models/Post";
 import { Tag } from "../models/Tag";
@@ -8,12 +9,12 @@ import { BaseService } from "./BaseService";
 import TagService from "./TagService";
 import UserService from "./UserService";
 
-const POPULATE_FIELDS = [
-  { field: "user", collection: "users", unwind: true },
-  { field: "tags", collection: "tags" },
-];
-
+const TAG_FILTER_FIELD = "tags.name";
 const SEARCH_FIELDS = ["body", "tags.name"];
+const POPULATE_FIELDS: Population[] = [
+  { field: "user", fromCollection: "users", unwind: true },
+  { field: "tags", fromCollection: "tags" },
+];
 
 function parseTags(s: string) {
   if (s == null) return { search: undefined, tags: undefined };
@@ -31,18 +32,22 @@ export default class PostService extends BaseService<Post> {
 
   public async get(filter?, options?, search?): Promise<Array<Post>> {
     const { search: searchString, tags } = parseTags(search);
+    const { sort, skip, limit } = options;
 
-    const documents = await getAndPopulate(
-      this.collection,
-      filter,
-      options,
-      searchString,
-      {
-        populateFields: POPULATE_FIELDS,
-        searchFields: SEARCH_FIELDS,
-        tags,
-      }
-    );
+    const filterFields =
+      tags != null && tags.length > 0
+        ? [{ name: TAG_FILTER_FIELD, values: tags }]
+        : undefined;
+
+    const aggregationDirector = new AggregationDirector(this.collection)
+      .find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .populate(POPULATE_FIELDS)
+      .search(searchString, SEARCH_FIELDS, filterFields);
+
+    const documents = await aggregationDirector.build().aggregateMany();
 
     if (documents == null) {
       throw new Error("Documents Not Found");
