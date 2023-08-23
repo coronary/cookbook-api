@@ -17,17 +17,17 @@ export default class SectionService extends BaseService<Section> {
     guideName: string,
     sectionName: string
   ): Promise<Section> {
-    const document = await getSectionFromNames(
+    const documents = await getSectionFromNames(
       cookbookName,
       guideName,
       sectionName
     );
 
-    if (document == null) {
+    if (documents == null || documents.length < 1) {
       throw new Error("Documents Not Found");
     }
 
-    return new Section({ ...this.serialize(document) });
+    return new Section({ ...this.serialize(documents[0]) });
   }
 
   public deserialize(model): DeSerializedSection {
