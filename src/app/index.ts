@@ -68,6 +68,7 @@ class App {
       bodyParser.urlencoded({ limit: bodySizeLimit, extended: true })
     );
     this.app.use(cors({ credentials: true, sameSite: "none" }));
+    this.app.set("trust proxy", 1);
     this.app.use(
       session({
         secret: process.env.SESSION_SECRET,
@@ -77,7 +78,6 @@ class App {
           sameSite: "none",
           secure: true,
         },
-        proxy: true,
         store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
       })
     );
