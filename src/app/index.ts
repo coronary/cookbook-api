@@ -67,7 +67,13 @@ class App {
     this.app.use(
       bodyParser.urlencoded({ limit: bodySizeLimit, extended: true })
     );
-    this.app.use(cors({ credentials: true, sameSite: "none", origin: 'https://cookbook.gg' }));
+    this.app.use(
+      cors({
+        credentials: true,
+        sameSite: "strict",
+        origin: "https://cookbook.gg",
+      })
+    );
     this.app.set("trust proxy", 1);
     this.app.use(
       session({
@@ -77,9 +83,9 @@ class App {
         cookie: {
           secure: true,
           httpOnly: true,
-          sameSite: 'strict',
-          domain: '.cookbook.gg',
-          maxAge: 60 * 60 * 24 * 1000
+          sameSite: "strict",
+          domain: ".cookbook.gg",
+          maxAge: 60 * 60 * 24 * 1000,
         },
         store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
       })
