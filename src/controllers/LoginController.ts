@@ -35,8 +35,8 @@ export class LoginController {
   }
 
   getCurrentUser(req, res, next) {
-    console.log("req: ", req);
-    console.log("user: ", req.session?.user);
+    console.log("headers: ", req.headers);
+    console.log("user: ", req.user);
     res.send(req.user);
   }
 }

@@ -70,7 +70,6 @@ class App {
     this.app.use(
       cors({
         credentials: true,
-        sameSite: "strict",
         origin: "https://cookbook.gg",
       })
     );
