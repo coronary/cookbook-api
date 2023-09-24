@@ -67,7 +67,7 @@ class App {
     this.app.use(
       bodyParser.urlencoded({ limit: bodySizeLimit, extended: true })
     );
-    // this.app.use(cors({ credentials: true, sameSite: "none" }));
+    this.app.use(cors({ credentials: true, sameSite: "none", origin: 'https://cookbook.gg' }));
     this.app.set("trust proxy", 1);
     this.app.use(
       session({
