@@ -77,7 +77,8 @@ class App {
         cookie: {
           secure: true,
           httpOnly: true,
-          sameSite: 'none',
+          sameSite: 'strict',
+          domain: '.cookbook.gg',
           maxAge: 60 * 60 * 24 * 1000
         },
         store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
