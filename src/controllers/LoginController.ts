@@ -26,10 +26,16 @@ export class LoginController {
       passport.authenticate("discord", { failureRedirect: "/" }),
       this.redirect
     );
+    this.router.get("/success", this.getCurrentUser);
   }
 
   redirect(req, res) {
     console.log(res.headers);
     res.redirect("https://cookbook.gg");
+  }
+
+  getCurrentUser(req, res, next) {
+    console.log("user: ", req.user);
+    res.send(req.user);
   }
 }
