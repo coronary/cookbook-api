@@ -29,6 +29,6 @@ export class LoginController {
   }
 
   redirect(req, res) {
-    res.redirect("/");
+    res.redirect("http://localhost:3000");
   }
 }
