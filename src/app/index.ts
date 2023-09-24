@@ -77,6 +77,7 @@ class App {
           sameSite: "none",
           secure: true,
         },
+        proxy: true,
         store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
       })
     );
