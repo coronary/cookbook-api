@@ -49,10 +49,12 @@ class App {
 
   private setConfig() {
     passport.serializeUser(function (user, done) {
+      console.log("🚀 ~ file: index.ts:52 ~ App ~ user:", user);
       done(null, user);
     });
 
     passport.deserializeUser(async function (user, done) {
+      console.log("🚀 ~ file: index.ts:56 ~ App ~ user:", user);
       try {
         const userModel = await AppInjector.injectClass(
           UserService
