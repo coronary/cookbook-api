@@ -73,10 +73,12 @@ class App {
       session({
         secret: process.env.SESSION_SECRET,
         resave: false,
-        saveUninitialized: false,
+        saveUninitialized: true,
         cookie: {
-          sameSite: "none",
-          secure: false,
+          secure: true,
+          httpOnly: true,
+          sameSite: 'none',
+          maxAge: 60 * 60 * 24 * 1000
         },
         store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
       })
