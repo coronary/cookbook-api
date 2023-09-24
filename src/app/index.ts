@@ -73,6 +73,10 @@ class App {
         secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
+        cookie: {
+          sameSite: "none",
+          secure: true,
+        },
         store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
       })
     );
