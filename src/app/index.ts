@@ -77,6 +77,7 @@ class App {
         cookie: {
           sameSite: "none",
           secure: true,
+          httpOnly: false,
         },
         store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
       })
