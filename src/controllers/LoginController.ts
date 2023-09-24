@@ -29,6 +29,7 @@ export class LoginController {
   }
 
   redirect(req, res) {
+    console.log(res);
     res.redirect("https://cookbook.gg");
   }
 }
