@@ -4,7 +4,7 @@ import qs from "qs";
 export const parseQueryStrings = (req, res, next) => {
   const query = req.query ?? {};
   const parsedFilters = qs.parse(query.filters);
-  console.log("cookies: ", req);
+  console.log("cookies: ", req.session.user);
   query.filters = query.filters ?? {};
   query.options = query.options ?? {};
   query.filters = parseObjectIds(parsedFilters);
