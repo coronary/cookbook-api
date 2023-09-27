@@ -30,18 +30,18 @@ export class AggregationDirector {
     this.steps?.sort?.();
 
     if (hasSkip && !hasSearch) {
-      this.steps.skip();
+      this.steps.skip?.();
     }
 
     if (hasLimit && !hasSearch) {
-      this.steps.limit();
+      this.steps.limit?.();
     }
 
     this.steps.populate?.();
 
     if (hasSearch) {
       this.steps.sort?.();
-      this.steps.search();
+      this.steps.search?.();
       this.steps.skip?.();
       this.steps.limit?.();
     }
