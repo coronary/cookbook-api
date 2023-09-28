@@ -92,14 +92,5 @@ export class ItemFromNameController {
     res.send(section.sanitize());
   }
 
-  async getCookbookFromName(name: string, filters = {}) {
-    const cookbooks =
-      (await this.cookbookService.get({
-        name,
-        ...filters,
-      })) ?? [];
-    return cookbooks[0];
-  }
-
   public static inject = ["cookbookService", "sectionService"] as const;
 }

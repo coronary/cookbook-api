@@ -7,32 +7,15 @@ import {
   ReturnDocument,
 } from "mongodb";
 
-const DATABASE_URL = process.env.DATABASE_URL;
-const DEPRICATED_DATABASE_URL = process.env.DEPRICATED_DATABASE_URL;
+const DATABASE_URL = process.env.DATABASE_URL ?? "";
+const DEPRICATED_DATABASE_URL = process.env.DEPRICATED_DATABASE_URL ?? "";
 
 export interface CollectionType {
   [collection: string]: Collection;
 }
 
-export const COLLECTIONS: CollectionType = {
-  GAMES: undefined,
-  COOKBOOKS: undefined,
-  USERS: undefined,
-  GUIDES: undefined,
-  TAGS: undefined,
-  POSTS: undefined,
-  SECTIONS: undefined,
-  FILES: undefined,
-};
-
-export const DEPRICATED_COLLECTIONS: CollectionType = {
-  GAMES: undefined,
-  COOKBOOKS: undefined,
-  USERS: undefined,
-  GUIDES: undefined,
-  TAGS: undefined,
-  POSTS: undefined,
-};
+export const COLLECTIONS: CollectionType = {};
+export const DEPRICATED_COLLECTIONS: CollectionType = {};
 
 export async function dbConnect() {
   try {
@@ -94,7 +77,7 @@ export async function get(
 export async function save(
   collection: Collection,
   model: any
-): Promise<Document> {
+): Promise<Document | null> {
   const { _id, ...body } = model;
   const filter = { _id: _id instanceof ObjectId ? _id : new ObjectId(_id) };
   const update = { $set: { ...body } };
