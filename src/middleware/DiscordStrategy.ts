@@ -9,7 +9,7 @@ export default new Strategy(
   {
     clientID: process.env.DISCORD_ID,
     clientSecret: process.env.DISCORD_SECRET,
-    callbackURL: "https://api.cookbook.gg/login/callback",
+    callbackURL: `${process.env.BASE_URL}/login/callback`,
     scope: scopes,
     prompt: prompt,
   },
@@ -32,5 +32,5 @@ export default new Strategy(
     } catch (err) {
       return next(err);
     }
-  }
+  },
 );

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { logRoutes } from "../utils/Logging";
 import passport from "passport";
-import { scopes, prompt } from "../middleware/DiscordStrategy";
+import { prompt, scopes } from "../middleware/DiscordStrategy";
 import { ROUTES } from "../constants/Constants";
 
 const DISCORD = "discord";
@@ -19,24 +19,21 @@ export class LoginController {
   setRoutes() {
     this.router.get(
       "/",
-      passport.authenticate(DISCORD, { scope: scopes, prompt: prompt })
+      passport.authenticate(DISCORD, { scope: scopes, prompt: prompt }),
     );
     this.router.get(
       "/callback",
-      passport.authenticate("discord", { failureRedirect: "/" }),
-      this.redirect
+      passport.authenticate(DISCORD, { failureRedirect: "/" }),
+      this.redirect,
     );
     this.router.get("/success", this.getCurrentUser);
   }
 
   redirect(req, res) {
-    console.log(res.headers);
-    res.redirect("https://cookbook.gg");
+    res.redirect(process.env.ORIGIN);
   }
 
   getCurrentUser(req, res, next) {
-    console.log("headers: ", req.headers);
-    console.log("user: ", req.user);
     res.send(req.user);
   }
 }

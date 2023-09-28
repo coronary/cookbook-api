@@ -49,15 +49,13 @@ class App {
 
   private setConfig() {
     passport.serializeUser(function (user, done) {
-      console.log("🚀 ~ file: index.ts:52 ~ App ~ user:", user);
       done(null, user);
     });
 
     passport.deserializeUser(async function (user, done) {
-      console.log("🚀 ~ file: index.ts:56 ~ App ~ user:", user);
       try {
         const userModel = await AppInjector.injectClass(
-          UserService
+          UserService,
         ).getByDiscordId(user.discordId);
         done(null, userModel);
       } catch (err) {
@@ -67,29 +65,35 @@ class App {
     passport.use(DiscordStrategy);
     this.app.use(bodyParser.json({ limit: bodySizeLimit }));
     this.app.use(
-      bodyParser.urlencoded({ limit: bodySizeLimit, extended: true })
+      bodyParser.urlencoded({ limit: bodySizeLimit, extended: true }),
     );
     this.app.use(
       cors({
         credentials: true,
-        origin: "https://cookbook.gg",
-      })
+        origin: process.env.ORIGIN,
+      }),
     );
     this.app.set("trust proxy", 1);
+
+    const sessionConfig: any = {
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 1000,
+      },
+      store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
+    };
+
+    if (!process.env.ORIGIN.includes('localhost')) {
+      sessionConfig.cookie.sameSite = 'strict';
+      sessionConfig.cookie.secure = true;
+      sessionConfig.cookie.domain = process.env.COOKIE_DOMAIN;
+    }
+
     this.app.use(
-      session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-          secure: true,
-          httpOnly: true,
-          sameSite: "strict",
-          domain: ".cookbook.gg",
-          maxAge: 60 * 60 * 24 * 1000,
-        },
-        store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
-      })
+      session(sessionConfig),
     );
     this.app.use(passport.initialize());
     this.app.use(passport.session());
@@ -113,7 +117,7 @@ class App {
     const cookbookController = AppInjector.injectClass(CookbookController);
     const userController = AppInjector.injectClass(UserController);
     const itemFromNameController = AppInjector.injectClass(
-      ItemFromNameController
+      ItemFromNameController,
     );
 
     this.app.use(`/${ROUTES.LOGIN}`, loginController.router);
