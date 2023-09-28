@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
 
 export interface DeSerializedSection {
-  _id?: ObjectId;
+  _id: ObjectId;
   cookbook: ObjectId;
   guide: ObjectId;
   name: string;
@@ -10,7 +10,7 @@ export interface DeSerializedSection {
 }
 
 export interface SerializedSection {
-  id?: ObjectId;
+  id: ObjectId;
   cookbook: ObjectId;
   guide: ObjectId;
   name: string;
@@ -26,7 +26,7 @@ export interface SanitizedSection {
 }
 
 export class Section extends BaseModel {
-  public id: ObjectId | undefined;
+  public id: ObjectId;
   public cookbook: ObjectId;
   public guide: ObjectId;
   public name: string;

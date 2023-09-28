@@ -1,10 +1,10 @@
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
 import { SanitizedUser, User, isUser } from "./User";
-import { SanitizedTag, SerializedTag, Tag, isTag } from "./Tag";
+import { SanitizedTag, Tag, isTag } from "./Tag";
 
 export interface DeSerializedPost {
-  _id?: ObjectId;
+  _id: ObjectId;
   cookbook: ObjectId;
   user: ObjectId;
   body: string;
@@ -12,7 +12,7 @@ export interface DeSerializedPost {
 }
 
 export interface SerializedPost {
-  id?: ObjectId;
+  id: ObjectId;
   cookbook: ObjectId;
   user: ObjectId;
   body: string;
@@ -20,7 +20,7 @@ export interface SerializedPost {
 }
 
 export interface SanitizedPost {
-  id?: ObjectId;
+  id: ObjectId;
   cookbook: ObjectId;
   user: ObjectId | SanitizedUser;
   body: string;
@@ -28,7 +28,7 @@ export interface SanitizedPost {
 }
 
 export class Post extends BaseModel {
-  public id: ObjectId | undefined;
+  public id: ObjectId;
   public cookbook: ObjectId;
   public user: ObjectId | User;
   public body: string;

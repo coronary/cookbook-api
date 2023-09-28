@@ -1,17 +1,12 @@
 import createError from "http-errors";
+import { DecoratorFactory } from "./DecoratorFactory";
 
 export const superAuth = (): any => {
-  return (target: any, propertyKey: string, descriptor: any) => {
-    const fn = descriptor.value;
-    descriptor.value = async function (...args: any[]) {
-      const [req, res, next] = args;
-      const user = req.user;
+  return DecoratorFactory.createDecorator((req, res, next) => {
+    const user = req.user;
 
-      if (user == null || !user.superAdmin) {
-        return next(createError(401, "Unauthorized"));
-      }
-
-      return fn.apply(this, args);
-    };
-  };
+    if (user == null || !user.superAdmin) {
+      return next(createError(401, "Unauthorized"));
+    }
+  });
 };

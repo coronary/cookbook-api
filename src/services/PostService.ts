@@ -53,17 +53,15 @@ export default class PostService extends BaseService<Post> {
       throw new Error("Documents Not Found");
     }
 
+    const userService = new UserService();
+    const tagService = new TagService();
+
     return documents.map((d) => {
       // user model
-      d.user = new User(
-        AppInjector.injectClass(UserService).serialize({ ...d.user })
-      );
+      d.user = new User(userService.serialize({ ...d.user }));
 
       // tag models
-      d.tags = d.tags.map(
-        (tag) =>
-          new Tag(AppInjector.injectClass(TagService).serialize({ ...tag }))
-      );
+      d.tags = d.tags.map((tag) => new Tag(tagService.serialize({ ...tag })));
 
       return new this.type({ ...this.serialize(d) });
     });

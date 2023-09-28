@@ -1,13 +1,11 @@
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
-import { AppInjector } from "../app";
-import GuideService from "../services/GuideService";
 import { SanitizedGuide } from "./Guide";
 
 const authRoles = ["admin", "chef"];
 
 export interface DeSerializedCookbook {
-  _id?: ObjectId;
+  _id: ObjectId;
   game: ObjectId;
   name: string;
   streams?: string[];
@@ -19,7 +17,7 @@ export interface DeSerializedCookbook {
 }
 
 export interface SerializedCookbook {
-  id?: ObjectId;
+  id: ObjectId;
   game: ObjectId;
   name: string;
   streams?: string[];
@@ -43,7 +41,7 @@ export interface SanitizedCookbook {
 }
 
 export class Cookbook extends BaseModel {
-  public id: ObjectId | undefined;
+  public id: ObjectId;
   public game: ObjectId;
   public name: string;
   public streams: string[];
@@ -57,10 +55,10 @@ export class Cookbook extends BaseModel {
     id,
     name,
     game,
-    streams,
+    streams = [],
     roles,
     preview,
-    guides,
+    guides = [],
     bannerUrl,
     avatarUrl,
   }: SerializedCookbook) {
@@ -80,19 +78,6 @@ export class Cookbook extends BaseModel {
     return this.roles != null && authRoles.includes(this.roles[userId]);
   }
 
-  public async populatedGuides() {
-    const populatedGuides = [];
-
-    for (const guideId of this.guides) {
-      const guide = await AppInjector.injectClass(GuideService).getById(
-        guideId.toString()
-      );
-      populatedGuides.push(await guide.sanitizeAsync());
-    }
-
-    return populatedGuides;
-  }
-
   public sanitize(): SanitizedCookbook {
     return {
       id: this.id,
@@ -102,20 +87,6 @@ export class Cookbook extends BaseModel {
       roles: this.roles,
       preview: this.preview,
       guides: this.guides,
-      bannerUrl: this.bannerUrl,
-      avatarUrl: this.avatarUrl,
-    };
-  }
-
-  public async sanitizeAsync(): Promise<SanitizedCookbook> {
-    return {
-      id: this.id,
-      game: this.game,
-      name: this.name,
-      streams: this.streams,
-      roles: this.roles,
-      preview: this.preview,
-      guides: await this.populatedGuides(),
       bannerUrl: this.bannerUrl,
       avatarUrl: this.avatarUrl,
     };

@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
 
 export interface DeSerializedFile {
-  _id?: ObjectId;
+  _id: ObjectId;
   cookbook: ObjectId;
   gfy_id?: string;
   urls: {
@@ -12,7 +12,7 @@ export interface DeSerializedFile {
 }
 
 export interface SerializedFile {
-  id?: ObjectId;
+  id: ObjectId;
   cookbook: ObjectId;
   gfyId?: string;
   urls: {
@@ -30,7 +30,7 @@ export interface SanitizedFile {
 }
 
 export class File extends BaseModel {
-  public id: ObjectId | undefined;
+  public id: ObjectId;
   public cookbook: ObjectId;
   public gfyId?: string;
   public urls: {

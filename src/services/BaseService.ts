@@ -11,16 +11,18 @@ export interface Service<T> {
   deleteOne: (id: string) => Promise<void>;
 }
 
-export class BaseService<T extends BaseModel> implements Service<T> {
+export abstract class BaseService<T extends BaseModel> implements Service<T> {
   constructor(public collection: Collection, public type: GenericModel<T>) {
     autoBind(this);
   }
 
   public async getById(id: string): Promise<T> {
     const document = await getById(this.collection, id);
+
     if (document == null) {
       throw new Error("Document Not Found");
     }
+
     return new this.type({ ...this.serialize(document) });
   }
 

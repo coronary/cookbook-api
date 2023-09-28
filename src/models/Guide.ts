@@ -1,17 +1,15 @@
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
-import SectionService from "../services/SectionService";
-import { AppInjector } from "../app";
 
 export interface DeSerializedGuide {
-  _id?: ObjectId;
+  _id: ObjectId;
   name: string;
   cookbook: ObjectId;
   sections: ObjectId[];
 }
 
 export interface SerializedGuide {
-  id?: ObjectId;
+  id: ObjectId;
   name: string;
   cookbook: ObjectId;
   sections: ObjectId[];
@@ -25,7 +23,7 @@ export interface SanitizedGuide {
 }
 
 export class Guide extends BaseModel {
-  public id: ObjectId | undefined;
+  public id: ObjectId;
   public name: string;
   public cookbook: ObjectId;
   public sections: ObjectId[];
@@ -36,28 +34,6 @@ export class Guide extends BaseModel {
     this.name = name;
     this.cookbook = cookbook;
     this.sections = sections;
-  }
-
-  public async populatedSections() {
-    const populatedSections = [];
-
-    for (const sectionId of this.sections) {
-      const section = await AppInjector.injectClass(SectionService).getById(
-        sectionId.toString()
-      );
-      populatedSections.push(section.sanitize());
-    }
-
-    return populatedSections;
-  }
-
-  public async sanitizeAsync(): Promise<SanitizedGuide> {
-    return {
-      id: this.id,
-      name: this.name,
-      cookbook: this.cookbook,
-      sections: await this.populatedSections(),
-    };
   }
 
   public sanitize(): SanitizedGuide {

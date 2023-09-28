@@ -46,15 +46,9 @@ export class BaseController<T extends BaseModel> {
 
   @tryCatch()
   async getAll(req, res, next) {
-    const { populate, filters, options, search } = req.query;
+    const { filters, options, search } = req.query;
     const models = await this.service.get(filters, options, search);
-    const sanitizedModels = [];
-    for (const model of models) {
-      sanitizedModels.push(
-        populate === "true" ? await model.sanitizeAsync() : model.sanitize()
-      );
-    }
-    res.send(sanitizedModels);
+    res.send(models.map((m) => m.sanitize()));
   }
 
   detailRoute(): string {
@@ -86,10 +80,7 @@ export class BaseController<T extends BaseModel> {
   @tryCatch()
   async getById(req, res, next) {
     const id = req.params[this.route];
-    const { populate } = req.query;
     const model = await this.service.getById(id);
-    res.send(
-      populate === "true" ? await model.sanitizeAsync() : model.sanitize()
-    );
+    res.send(model.sanitize());
   }
 }

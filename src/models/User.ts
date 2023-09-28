@@ -9,7 +9,7 @@ export interface SocialLinks {
 }
 
 export interface SanitizedUser {
-  id?: ObjectId;
+  id: ObjectId;
   discordId: string;
   discordUsername: string;
   discordAvatar: string;
@@ -18,7 +18,7 @@ export interface SanitizedUser {
 }
 
 export interface SerializedUser {
-  id?: ObjectId;
+  id: ObjectId;
   discordId: string;
   discordUsername: string;
   discordAvatar: string;
@@ -37,16 +37,13 @@ export interface DeSerializedUser {
 
 export function isUser(object: any): object is User {
   const { id, discordId, discordUsername } = object;
-  if (
-    id !== undefined &&
-    discordId !== undefined &&
-    discordUsername !== undefined
-  )
-    return true;
+  return (
+    id !== undefined && discordId !== undefined && discordUsername !== undefined
+  );
 }
 
 export class User extends BaseModel {
-  public id: ObjectId | undefined;
+  public id: ObjectId;
   public discordId: string;
   public discordUsername: string;
   public discordAvatar: string;
@@ -60,14 +57,7 @@ export class User extends BaseModel {
     discordAvatar,
     socialLinks = {},
     superAdmin = false,
-  }: {
-    id?: ObjectId;
-    discordId: string;
-    discordUsername: string;
-    discordAvatar: string;
-    socialLinks?: SocialLinks;
-    superAdmin?: boolean;
-  }) {
+  }: SanitizedUser) {
     super();
     this.id = id;
     this.discordId = discordId;

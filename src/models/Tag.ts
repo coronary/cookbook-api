@@ -2,14 +2,14 @@ import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
 
 export interface DeSerializedTag {
-  _id?: ObjectId;
+  _id: ObjectId;
   name: string;
   cookbook: ObjectId;
-  color?: string;
+  color: string | null | undefined;
 }
 
 export interface SerializedTag {
-  id?: ObjectId;
+  id: ObjectId;
   name: string;
   cookbook: ObjectId;
   color?: string;
@@ -19,17 +19,16 @@ export interface SanitizedTag {
   id: ObjectId;
   name: string;
   cookbook: ObjectId;
-  color?: string;
+  color: string | null | undefined;
 }
 
 export function isTag(object: any): object is Tag {
   const { id, name, cookbook } = object;
-  if (id !== undefined && name !== undefined && cookbook !== undefined)
-    return true;
+  return id !== undefined && name !== undefined && cookbook !== undefined;
 }
 
 export class Tag extends BaseModel {
-  public id: ObjectId | undefined;
+  public id: ObjectId;
   public name: string;
   public cookbook: ObjectId;
   public color: string | null | undefined;

@@ -2,14 +2,14 @@ import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
 
 export interface DeSerializedGame {
-  _id?: ObjectId;
+  _id: ObjectId;
   name: string;
   display_name: string;
   subdomain: string;
 }
 
 export interface SerializedGame {
-  id?: ObjectId;
+  id: ObjectId;
   name: string;
   displayName: string;
   subdomain: string;
@@ -23,7 +23,7 @@ export interface SanitizedGame {
 }
 
 export class Game extends BaseModel {
-  public id: ObjectId | undefined;
+  public id: ObjectId;
   public name: string;
   public displayName: string;
   public subdomain: string;
