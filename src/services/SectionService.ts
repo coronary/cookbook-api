@@ -1,6 +1,7 @@
 import { getSectionFromNames } from "../db/aggregates/section";
 import { COLLECTIONS } from "../db/db";
 import RedisCache, { Caches } from "../db/RedisCache";
+import { parseObjectIds } from "../middleware/QueryStrings";
 import {
   DeSerializedSection,
   Section,
@@ -18,6 +19,7 @@ export default class SectionService extends BaseService<Section> {
     const cookbookService = new CookbookService();
     const cookbook = await cookbookService.getById(model.cookbook);
     await RedisCache.delete(Caches.COOKBOOK(cookbook.name));
+    parseObjectIds(model);
     return await super.save(model);
   }
 

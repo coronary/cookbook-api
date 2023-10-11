@@ -1,10 +1,10 @@
-import { AppInjector } from "../app";
+import { ObjectId } from "mongodb";
 import { Population } from "../db/aggregates/AggregationBuilder";
 import { AggregationDirector } from "../db/aggregates/AggregationDirector";
 import { COLLECTIONS } from "../db/db";
-import { Post, DeSerializedPost, SerializedPost } from "../models/Post";
-import { Tag } from "../models/Tag";
-import { User } from "../models/User";
+import { DeSerializedPost, Post, SerializedPost } from "../models/Post";
+import { isTag, Tag } from "../models/Tag";
+import { isUser, User } from "../models/User";
 import { BaseService } from "./BaseService";
 import TagService from "./TagService";
 import UserService from "./UserService";
@@ -34,10 +34,9 @@ export default class PostService extends BaseService<Post> {
     const { search: searchString, tags } = parseTags(search);
     const { sort, skip, limit } = options;
 
-    const filterFields =
-      tags != null && tags.length > 0
-        ? [{ name: TAG_FILTER_FIELD, values: tags }]
-        : undefined;
+    const filterFields = tags != null && tags.length > 0
+      ? [{ name: TAG_FILTER_FIELD, values: tags }]
+      : undefined;
 
     const aggregationDirector = new AggregationDirector(this.collection)
       .find(filter)
@@ -65,6 +64,13 @@ export default class PostService extends BaseService<Post> {
 
       return new this.type({ ...this.serialize(d) });
     });
+  }
+
+  async save(model: Post) {
+    model.cookbook = new ObjectId(model.cookbook);
+    model.user = isUser(model.user) ? new ObjectId(model.user.id) : model.user;
+    model.tags = model.tags.map((t) => isTag(t) ? new ObjectId(t.id) : t);
+    return await super.save(model);
   }
 
   public deserialize(model): DeSerializedPost {
