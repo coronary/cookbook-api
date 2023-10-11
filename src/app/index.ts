@@ -24,7 +24,6 @@ import FileService from "../services/FileService";
 import { parseQueryStrings } from "../middleware/QueryStrings";
 import { ItemFromNameController } from "../controllers/ItemFromNameController";
 import RedisCache from "../db/RedisCache";
-import { syncGuides, syncPosts } from "../db/sync";
 
 export const AppInjector = createInjector()
   .provideClass("gameService", GameService)
@@ -105,12 +104,6 @@ class App {
     await dbConnectDepricated();
     await RedisCache.connect();
     await RedisCache.flushAll();
-    // await syncGames();
-    // await syncUsers();
-    // await syncCookbooks();
-    // await syncTags();
-    // await syncPosts();
-    // await syncGuides();
 
     const loginController = AppInjector.injectClass(LoginController);
     const gameController = AppInjector.injectClass(GameController);
