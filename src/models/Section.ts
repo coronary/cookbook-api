@@ -25,6 +25,14 @@ export interface SanitizedSection {
   body: string;
 }
 
+export function isSection(object: any): object is Section {
+  const { id, name, cookbook, guide, body } = object;
+  return (
+    id !== undefined && name !== undefined && cookbook !== undefined &&
+    guide !== undefined && body !== undefined
+  );
+}
+
 export class Section extends BaseModel {
   public id: ObjectId;
   public cookbook: ObjectId;

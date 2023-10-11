@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { BaseModel } from "./BaseModel";
-import { SanitizedGuide } from "./Guide";
+import { isGuide, SanitizedGuide } from "./Guide";
 
 const authRoles = ["admin", "chef"];
 
@@ -86,7 +86,9 @@ export class Cookbook extends BaseModel {
       streams: this.streams,
       roles: this.roles,
       preview: this.preview,
-      guides: this.guides,
+      guides: this.guides.map((guide) =>
+        isGuide(guide) ? guide?.sanitize() : guide
+      ),
       bannerUrl: this.bannerUrl,
       avatarUrl: this.avatarUrl,
     };

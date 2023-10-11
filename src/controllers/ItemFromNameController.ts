@@ -14,7 +14,7 @@ export class ItemFromNameController {
 
   constructor(
     private cookbookService: CookbookService,
-    private sectionService: SectionService
+    private sectionService: SectionService,
   ) {
     autoBind(this);
     this.setRoutes();
@@ -25,7 +25,7 @@ export class ItemFromNameController {
     this.router.get(`/:${ROUTES.COOKBOOK_NAME}`, this.getCookbook);
     this.router.get(
       `/:${ROUTES.COOKBOOK_NAME}/${ROUTES.GUIDE_NAME}/:${ROUTES.GUIDE_NAME}/${ROUTES.SECTION_NAME}/:${ROUTES.SECTION_NAME}`,
-      this.getSection
+      this.getSection,
     );
   }
 
@@ -45,7 +45,7 @@ export class ItemFromNameController {
     }
 
     const cookbook = await this.cookbookService.getPopulatedCookbook(
-      cookbookName
+      cookbookName,
     );
 
     if (cookbook == null) {
@@ -66,7 +66,7 @@ export class ItemFromNameController {
     }
 
     const cachedSection = await RedisCache.get(
-      Caches.SECTION(cookbookName, guideName, sectionName)
+      Caches.SECTION(cookbookName, guideName, sectionName),
     );
 
     if (cachedSection != null) {
@@ -77,7 +77,7 @@ export class ItemFromNameController {
     const section = await this.sectionService.getSectionFromNames(
       cookbookName,
       guideName,
-      sectionName
+      sectionName,
     );
 
     if (section == null) {
@@ -86,7 +86,7 @@ export class ItemFromNameController {
 
     await RedisCache.set(
       Caches.SECTION(cookbookName, guideName, sectionName),
-      section
+      section,
     );
 
     res.send(section.sanitize());

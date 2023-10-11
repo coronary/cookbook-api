@@ -1,4 +1,4 @@
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { GenericModel } from "../controllers/BaseController";
 import { get, save, getById, deleteOne } from "../db/db";
 import { BaseModel } from "../models/BaseModel";
@@ -16,7 +16,7 @@ export abstract class BaseService<T extends BaseModel> implements Service<T> {
     autoBind(this);
   }
 
-  public async getById(id: string): Promise<T> {
+  public async getById(id: string | ObjectId): Promise<T> {
     const document = await getById(this.collection, id);
 
     if (document == null) {

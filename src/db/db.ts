@@ -1,8 +1,8 @@
 import {
-  MongoClient,
-  Db,
   Collection,
+  Db,
   Document,
+  MongoClient,
   ObjectId,
   ReturnDocument,
 } from "mongodb";
@@ -59,9 +59,9 @@ export async function syncDbs() {}
 
 export async function getById(
   collection: Collection,
-  id: string
+  _id: string | ObjectId,
 ): Promise<Document> {
-  const filter = { _id: new ObjectId(id) };
+  const filter = { _id: _id instanceof ObjectId ? _id : new ObjectId(_id) };
   const documents = await collection.find(filter).toArray();
   return documents[0];
 }
@@ -69,14 +69,14 @@ export async function getById(
 export async function get(
   collection: Collection,
   filter = {},
-  options = {}
+  options = {},
 ): Promise<Array<Document>> {
   return collection.find(filter, options).toArray();
 }
 
 export async function save(
   collection: Collection,
-  model: any
+  model: any,
 ): Promise<Document | null> {
   const { _id, ...body } = model;
   const filter = { _id: _id instanceof ObjectId ? _id : new ObjectId(_id) };
@@ -89,7 +89,7 @@ export async function save(
 
 export async function deleteOne(
   collection: Collection,
-  id: string
+  id: string,
 ): Promise<void> {
   await collection.deleteOne({ _id: new ObjectId(id) });
 }

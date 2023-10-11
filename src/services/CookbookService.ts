@@ -5,7 +5,11 @@ import {
   DeSerializedCookbook,
   SerializedCookbook,
 } from "../models/Cookbook";
+import { Guide } from "../models/Guide";
+import { Section } from "../models/Section";
 import { BaseService } from "./BaseService";
+import GuideService from "./GuideService";
+import SectionService from "./SectionService";
 
 export default class CookbookService extends BaseService<Cookbook> {
   constructor() {
@@ -19,7 +23,14 @@ export default class CookbookService extends BaseService<Cookbook> {
       throw new Error("Documents Not Found");
     }
 
+    const sectionService = new SectionService();
+    const guideService = new GuideService();
     const document = documents[0];
+    document.guides = document.guides.map((guide) => {
+      const _guide: Guide = new Guide({ ...guideService.serialize(guide) });
+      _guide.sections = _guide.sections.map(section => new Section({...sectionService.serialize(section)}))
+      return _guide;
+    });
 
     return new Cookbook({ ...this.serialize(document) });
   }

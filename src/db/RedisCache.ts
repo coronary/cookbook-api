@@ -14,10 +14,9 @@ class RedisCache {
   public client;
 
   constructor() {
-    this.client =
-      REDIS_URL != null
-        ? redis.createClient({ url: REDIS_URL })
-        : redis.createClient();
+    this.client = REDIS_URL != null
+      ? redis.createClient({ url: REDIS_URL })
+      : redis.createClient();
     this.client.on("error", (error) => console.error(`Error : ${error}`));
   }
 
@@ -41,6 +40,14 @@ class RedisCache {
       return await this.client.get(key);
     } catch (err) {
       logger.error("Error redis.get: ", err);
+    }
+  }
+
+  async delete(key) {
+    try {
+      return await this.client.del(key);
+    } catch (err) {
+      logger.error("Error redis.delete: ", err);
     }
   }
 }
