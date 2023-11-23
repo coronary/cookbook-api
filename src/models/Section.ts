@@ -28,8 +28,11 @@ export interface SanitizedSection {
 export function isSection(object: any): object is Section {
   const { id, name, cookbook, guide, body } = object;
   return (
-    id !== undefined && name !== undefined && cookbook !== undefined &&
-    guide !== undefined && body !== undefined
+    id !== undefined &&
+    name !== undefined &&
+    cookbook !== undefined &&
+    guide !== undefined &&
+    body !== undefined
   );
 }
 
@@ -40,7 +43,7 @@ export class Section extends BaseModel {
   public name: string;
   public body: string;
 
-  constructor({ id, cookbook, guide, name, body }: SerializedSection) {
+  constructor({ id, cookbook, guide, name, body }: Partial<SerializedSection>) {
     super();
     this.id = id;
     this.cookbook = cookbook;

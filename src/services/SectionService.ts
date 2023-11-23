@@ -26,12 +26,12 @@ export default class SectionService extends BaseService<Section> {
   async getSectionFromNames(
     cookbookName: string,
     guideName: string,
-    sectionName: string,
+    sectionName: string
   ): Promise<Section> {
     const documents = await getSectionFromNames(
       cookbookName,
       guideName,
-      sectionName,
+      sectionName
     );
 
     if (documents == null || documents.length < 1) {

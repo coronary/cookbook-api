@@ -61,7 +61,7 @@ export class Cookbook extends BaseModel {
     guides = [],
     bannerUrl,
     avatarUrl,
-  }: SerializedCookbook) {
+  }: Partial<SerializedCookbook>) {
     super();
     this.id = id;
     this.game = game;

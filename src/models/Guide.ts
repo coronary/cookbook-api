@@ -26,7 +26,9 @@ export interface SanitizedGuide {
 export function isGuide(object: any): object is Guide {
   const { id, name, cookbook, sections } = object;
   return (
-    id !== undefined && name !== undefined && cookbook !== undefined &&
+    id !== undefined &&
+    name !== undefined &&
+    cookbook !== undefined &&
     sections !== undefined
   );
 }
@@ -37,7 +39,7 @@ export class Guide extends BaseModel {
   public cookbook: ObjectId;
   public sections: ObjectId[] | Section[];
 
-  constructor({ id, name, cookbook, sections }: SerializedGuide) {
+  constructor({ id, name, cookbook, sections = [] }: Partial<SerializedGuide>) {
     super();
     this.id = id;
     this.name = name;
@@ -50,7 +52,9 @@ export class Guide extends BaseModel {
       id: this.id,
       name: this.name,
       cookbook: this.cookbook,
-      sections: this.sections.map(section => isSection(section) ? section?.sanitize() : section),
+      sections: this.sections.map((section) =>
+        isSection(section) ? section?.sanitize() : section
+      ),
     };
   }
 }

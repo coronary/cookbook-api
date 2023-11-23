@@ -1,5 +1,7 @@
+import RedisCache, { Caches } from "../db/RedisCache";
 import { getAndPopulateCookbooks } from "../db/aggregates/cookbook";
 import { COLLECTIONS } from "../db/db";
+import { parseObjectIds } from "../middleware/QueryStrings";
 import {
   Cookbook,
   DeSerializedCookbook,
@@ -28,11 +30,19 @@ export default class CookbookService extends BaseService<Cookbook> {
     const document = documents[0];
     document.guides = document.guides.map((guide) => {
       const _guide: Guide = new Guide({ ...guideService.serialize(guide) });
-      _guide.sections = _guide.sections.map(section => new Section({...sectionService.serialize(section)}))
+      _guide.sections = _guide.sections.map(
+        (section) => new Section({ ...sectionService.serialize(section) })
+      );
       return _guide;
     });
 
     return new Cookbook({ ...this.serialize(document) });
+  }
+
+  async save(model: Cookbook) {
+    await RedisCache.delete(Caches.COOKBOOK(model.name));
+    parseObjectIds(model);
+    return await super.save(model);
   }
 
   public deserialize(model): DeSerializedCookbook {
