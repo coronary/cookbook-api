@@ -8,11 +8,14 @@ import { Section } from "../models/Section";
 import GuideService from "../services/GuideService";
 import SectionService from "../services/SectionService";
 import { GuideBaseController } from "./GuideBaseController";
+import RedisCache, { Caches } from "../db/RedisCache";
+import CookbookService from "../services/CookbookService";
 
 export class SectionController extends GuideBaseController<Section> {
   constructor(
     private sectionService: SectionService,
-    private guideService: GuideService
+    private guideService: GuideService,
+    private cookbookService: CookbookService
   ) {
     super(Section, sectionService, ROUTES.SECTIONS);
   }
@@ -45,5 +48,36 @@ export class SectionController extends GuideBaseController<Section> {
     res.send(section.sanitize());
   }
 
-  public static inject = ["sectionService", "guideService"] as const;
+  @tryCatch()
+  @guideId()
+  @cookbookId()
+  async deleteOne(req, res, next) {
+    const { body, params } = req;
+    const { cookbook: cookbookId, guide: guideId } = body;
+    const { sections: sectionId } = params;
+
+    await this.sectionService.deleteOne(sectionId);
+
+    const guide = await this.guideService.getById(guideId);
+    const guideModel = new Guide({
+      ...guide,
+      sections: (guide.sections as ObjectId[]).filter(
+        (s: ObjectId) => s.toString() !== sectionId.toString()
+      ),
+    });
+
+    await this.guideService.save(guideModel);
+
+    const cookbook = await this.cookbookService.getById(cookbookId);
+
+    await RedisCache.delete(Caches.COOKBOOK(cookbook.name));
+
+    res.status(200).send();
+  }
+
+  public static inject = [
+    "sectionService",
+    "guideService",
+    "cookbookService",
+  ] as const;
 }
