@@ -37,7 +37,6 @@ export class SectionController extends GuideBaseController<Section> {
       guide: guideId,
       cookbook: cookbookId,
     });
-
     const section = await this.sectionService.save(sectionModel);
     const guide = await this.guideService.getById(guideId);
     const guideModel = new Guide({

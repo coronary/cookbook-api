@@ -1,6 +1,15 @@
 import { ObjectId } from "mongodb";
 import qs from "qs";
 
+const VALID_OBJECT_ID_KEYS = [
+  "game",
+  "guide",
+  "cookbook",
+  "section",
+  "user",
+  "tag",
+];
+
 export const parseQueryStrings = (req, res, next) => {
   const query = req.query ?? {};
   const parsedFilters = qs.parse(query.filters);
@@ -16,7 +25,9 @@ export function parseObjectIds(query) {
   const keys = Object.keys(query);
 
   for (const key of keys) {
-    if (ObjectId.isValid(query[key])) query[key] = new ObjectId(query[key]);
+    if (VALID_OBJECT_ID_KEYS.includes(key)) {
+      if (ObjectId.isValid(query[key])) query[key] = new ObjectId(query[key]);
+    }
   }
 
   return query;
