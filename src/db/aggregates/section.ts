@@ -51,6 +51,7 @@ export async function getSectionFromNames(
         _id: "$guides.sections._id",
         name: "$guides.sections.name",
         body: "$guides.sections.body",
+        authors: "$guides.sections.authors"
       },
     },
   ]).toArray();

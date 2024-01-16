@@ -80,7 +80,7 @@ class App {
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        maxAge: 60 * 60 * 24 * 1000,
+        maxAge: 60 * 60 * 24 * 1000 * 365,
       },
       store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
     };

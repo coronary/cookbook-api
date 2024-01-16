@@ -1,3 +1,4 @@
+import { Document, ObjectId } from "mongodb";
 import { getSectionFromNames } from "../db/aggregates/section";
 import { COLLECTIONS } from "../db/db";
 import RedisCache, { Caches } from "../db/RedisCache";
@@ -7,8 +8,10 @@ import {
   Section,
   SerializedSection,
 } from "../models/Section";
+import { User } from "../models/User";
 import { BaseService } from "./BaseService";
 import CookbookService from "./CookbookService";
+import UserService from "./UserService";
 
 export default class SectionService extends BaseService<Section> {
   constructor() {
@@ -26,12 +29,12 @@ export default class SectionService extends BaseService<Section> {
   async getSectionFromNames(
     cookbookName: string,
     guideName: string,
-    sectionName: string
+    sectionName: string,
   ): Promise<Section> {
     const documents = await getSectionFromNames(
       cookbookName,
       guideName,
-      sectionName
+      sectionName,
     );
 
     if (documents == null || documents.length < 1) {
@@ -42,24 +45,35 @@ export default class SectionService extends BaseService<Section> {
   }
 
   public deserialize(model): DeSerializedSection {
-    const { id, cookbook, guide, name, body } = model;
+    const { id, cookbook, guide, name, body, authors } = model;
+    const userService = new UserService();
+
     return {
       _id: id,
       cookbook,
       guide,
       name: name,
       body,
+      authors: authors.map((author: User) => (
+        userService.deserialize(author)
+      )),
     };
   }
 
   public serialize(document): SerializedSection {
-    const { _id, cookbook, guide, name, body } = document;
+    const { _id, cookbook, guide, name, body, authors = [] } = document;
+
+    const userService = new UserService();
     return {
       id: _id,
+      creationDate: _id.getTimestamp(),
       cookbook,
       guide,
       name,
       body,
+      authors: authors.map((author: User) => (
+        userService.serialize(author)
+      )),
     };
   }
 }
