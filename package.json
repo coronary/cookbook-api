@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --experimentalDecorators",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/index.js",
+    "dev": "npx nodemon"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,8 @@
     "@types/express": "^4.17.13",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.1",
-    "ts-node": "^10.0.0"
-  }
+    "ts-node": "^10.0.0",
+    "typescript": "^5.4.5"
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
