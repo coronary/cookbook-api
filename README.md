@@ -1,6 +1,6 @@
 # API for Cookbook.gg
 
-This is the code that helps run [cookboo.gg](cookbook.gg) behind the scenes!
+This is the code that helps run [cookbook.gg](cookbook.gg) behind the scenes!
 
 ## Getting Started
 ### Prepping the API to run locally
